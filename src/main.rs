@@ -1,3 +1,5 @@
+use rocket::fs::FileServer;
+
 #[macro_use]
 extern crate rocket;
 /// this module defines the client api
@@ -11,7 +13,7 @@ pub mod logic;
 fn launch() -> _ {
     match config::cli_get_matches().subcommand() {
         Some(("start", _)) => rocket::build()
-            .mount("/", routes![])
+            .mount("/", FileServer::from("static/"))
             .mount("/api", api::routes()),
         _ => unreachable!(),
     }
