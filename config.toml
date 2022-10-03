@@ -1,5 +1,8 @@
 [frontend]
+# file path to frontend
+# this is where your index.html lives
 location = 'static'
+
 [web]
 port = 6969
 address = "127.0.0.1"
