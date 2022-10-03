@@ -1,2 +1,4 @@
 [frontend]
 location = 'static'
+[web]
+port = 6969

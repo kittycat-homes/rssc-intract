@@ -1,4 +1,4 @@
-use rocket::fs::FileServer;
+use rocket::{figment::Figment, fs::FileServer};
 
 #[macro_use]
 extern crate rocket;
@@ -26,8 +26,10 @@ lazy_static! {
 #[launch]
 fn launch() -> _ {
     match CLI.subcommand {
-        config::Subcommand::Start => rocket::build()
-            .mount("/", FileServer::from(&CONF.frontend.location))
-            .mount("/api", api::routes()),
+        config::Subcommand::Start => {
+            rocket::custom(Figment::from(rocket::Config::default()).merge(("port", CONF.web.port)))
+                .mount("/", FileServer::from(&CONF.frontend.location))
+                .mount("/api", api::routes())
+        }
     }
 }

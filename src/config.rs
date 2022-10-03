@@ -24,6 +24,7 @@ pub struct Cli {
 #[derive(Default, Serialize, Deserialize, Debug)]
 pub struct ServerConfig {
     pub frontend: FrontendConfig,
+    pub web: WebConfig,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug)]
@@ -31,6 +32,11 @@ pub struct FrontendConfig {
     /// relative path to the web frontend location,
     /// this is where your index.html should be
     pub location: String,
+}
+
+#[derive(Default, Serialize, Deserialize, Debug)]
+pub struct WebConfig {
+    pub port: u16,
 }
 
 pub fn get_config_file() -> ServerConfig {
