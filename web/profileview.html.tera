@@ -1,0 +1,15 @@
+{% extends "base" %}
+{% block title %}Index{% endblock title %}
+{% block head %}
+    {{ super() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock head %}
+{% block content %}
+    <h1>Index</h1>
+    <p class="important">
+    peenis penis haha
+    {{userid}}
+    </p>
+{% endblock content %}
