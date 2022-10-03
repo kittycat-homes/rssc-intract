@@ -10,7 +10,7 @@
     <div id="content">{% block content %}{% endblock content %}</div>
     <div id="footer">
         {% block footer %}
-        &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.
+        <p> &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.</p>
         {% endblock footer %}
     </div>
 </body>

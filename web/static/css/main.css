@@ -1,3 +1,9 @@
+:root {
+    --background: #333745;
+    --foreground: #F7F3F6;
+    --accent: #A8F0AE;
+}
+
 @font-face {
     font-family: "Atkinson";
     src: url("/static/fonts/AtkinsonHyperlegible-Regular.ttf");
@@ -5,4 +11,16 @@
 
 * {
     font-family: "Atkinson";
+}
+
+body {
+    background-color: var(--background);
+}
+
+p {
+    color: var(--foreground);
+}
+
+h1, a {
+    color: var(--accent);
 }
