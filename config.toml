@@ -2,3 +2,4 @@
 location = 'static'
 [web]
 port = 6969
+address = "127.0.0.1"

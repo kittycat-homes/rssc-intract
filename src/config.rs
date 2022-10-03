@@ -37,6 +37,7 @@ pub struct FrontendConfig {
 #[derive(Default, Serialize, Deserialize, Debug)]
 pub struct WebConfig {
     pub port: u16,
+    pub address: String,
 }
 
 pub fn get_config_file() -> ServerConfig {

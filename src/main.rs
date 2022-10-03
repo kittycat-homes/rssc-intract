@@ -26,10 +26,15 @@ lazy_static! {
 #[launch]
 fn launch() -> _ {
     match CLI.subcommand {
-        config::Subcommand::Start => {
-            rocket::custom(Figment::from(rocket::Config::default()).merge(("port", CONF.web.port)))
-                .mount("/", FileServer::from(&CONF.frontend.location))
-                .mount("/api", api::routes())
-        }
+        config::Subcommand::Start => rocket::custom(
+            Figment::from(rocket::Config::default())
+                // settings for rocket
+                .merge(("port", &CONF.web.port))
+                .merge(("address", &CONF.web.address)),
+        )
+        // serve frontend
+        .mount("/", FileServer::from(&CONF.frontend.location))
+        // serve api
+        .mount("/api", api::routes()),
     }
 }
