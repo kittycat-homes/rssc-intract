@@ -20,7 +20,6 @@ size = 5
 console_level = "Info"
 
 # Lowest log level in log file
-# You probably shouldn't change this
 # Default: Trace
 file_level = "Trace"
 
