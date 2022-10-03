@@ -1,4 +1,4 @@
-use log::{info, LevelFilter, SetLoggerError};
+use log::SetLoggerError;
 use log4rs::{
     append::{
         console::{ConsoleAppender, Target},

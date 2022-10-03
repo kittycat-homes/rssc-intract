@@ -1,7 +1,7 @@
 [frontend]
 # file path to frontend
 # this is where your index.html lives
-location = 'static'
+location = 'frontend/build'
 
 [web]
 port = 6969
