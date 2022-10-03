@@ -7,4 +7,6 @@ edition = "2021"
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
 jsonwebtoken = "8"
 serde = { version = "1", features = ["derive"] }
-clap="4"
+clap = { version = "4", features = ["derive"] }
+confy="0.5"
+lazy_static="1"
