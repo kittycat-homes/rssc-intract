@@ -1,4 +1,3 @@
-use clap::{ArgMatches, Parser};
 use rocket::fs::FileServer;
 
 #[macro_use]
@@ -17,7 +16,10 @@ mod config;
 pub mod logic;
 
 lazy_static! {
-    static ref CLI: config::Cli = config::Cli::parse();
+    static ref CLI: config::Cli = config::get_cli();
+    // the config is dependant on the cli inputs
+    // because it gets overwritten by them
+    // so we load need to make sure that cli is not dependant on config
     static ref CONF: config::ServerConfig = config::get_config_file();
 }
 

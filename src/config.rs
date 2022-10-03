@@ -1,4 +1,4 @@
-use clap::{ArgMatches, Args, Command, Parser};
+use clap::Parser;
 use serde::{Deserialize, Serialize};
 
 // defines all different subcommands
@@ -14,8 +14,9 @@ pub struct Cli {
     /// this is the config file you want to use,
     /// specifying this overwrites the default path
     #[arg(short, long)]
-    pub config: Option<String>,
+    pub configpath: Option<String>,
 
+    /// the subcommand to use the server with
     #[command(subcommand)]
     pub subcommand: Subcommand,
 }
@@ -33,5 +34,14 @@ pub struct FrontendConfig {
 }
 
 pub fn get_config_file() -> ServerConfig {
-    confy::load("rssc-intract", "config").unwrap()
+    // its ok to unwrap here since we need a working config file anyways
+    match &crate::CLI.configpath {
+        Some(path) => confy::load_path(path).unwrap(),
+        // let confy decide where to find the config
+        _ => confy::load("rssc-intract", "config").unwrap(),
+    }
+}
+
+pub fn get_cli() -> Cli {
+    Cli::parse()
 }
