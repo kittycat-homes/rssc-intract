@@ -1,5 +1,4 @@
 use clap::Parser;
-use log::LevelFilter;
 use serde::{Deserialize, Serialize};
 
 // defines all different subcommands
@@ -26,16 +25,8 @@ pub struct Cli {
 
 #[derive(Default, Serialize, Deserialize, Debug)]
 pub struct ServerConfig {
-    pub frontend: FrontendConfig,
     pub web: WebConfig,
     pub log: LogConfig,
-}
-
-#[derive(Default, Serialize, Deserialize, Debug)]
-pub struct FrontendConfig {
-    /// relative path to the web frontend location,
-    /// this is where your index.html should be
-    pub location: String,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug)]
