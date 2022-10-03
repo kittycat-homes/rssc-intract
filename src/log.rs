@@ -17,6 +17,8 @@ pub fn init_log(
     console_level: log::LevelFilter,
     file_level: log::LevelFilter,
 ) -> Result<(), SetLoggerError> {
+    // if the log file is bigger than log_size in bytes, we replace the log file instead of
+    // appending to it.
     let mut append = true;
     match fs::metadata(log_path) {
         Ok(log) => {
@@ -29,6 +31,7 @@ pub fn init_log(
         }
     };
 
+    // creates configuration for the log file
     let log_file = FileAppender::builder()
         .encoder(Box::new(PatternEncoder::new(
             "{l} {d(%Y-%m-%d %H:%M:%S)} - {m}\n",
@@ -37,13 +40,16 @@ pub fn init_log(
         .build(log_path)
         .unwrap();
 
+    // creates configuration for stderr outputs
     let stderr = ConsoleAppender::builder()
         .target(Target::Stderr)
         .encoder(Box::new(PatternEncoder::new(
-            "{h({l})} {d(%Y-%m-%d %H:%M:%S)} - {m}\n",
+            "{h({l})} {d(%Y-%m-%d %H:%M:%S)} - {m}\n", // pattern is the same as in the log file,
+                                                       // but slightly more colourful
         )))
         .build();
 
+    // creates the full configuration using log_file and stderr
     let config = Config::builder()
         .appender(Appender::builder().build("log_file", Box::new(log_file)))
         .appender(
@@ -59,8 +65,10 @@ pub fn init_log(
         )
         .unwrap();
 
+    // initializes config
     let _handle = log4rs::init_config(config)?;
 
+    // send a lil message announcing that logging has started successfully
     info!("Logging has started :)");
-    Ok(())
+    Ok(()) //Ok
 }
