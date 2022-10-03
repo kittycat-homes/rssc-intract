@@ -25,6 +25,7 @@ pub struct Cli {
 
 #[derive(Default, Serialize, Deserialize, Debug)]
 pub struct ServerConfig {
+    pub frontend: FrontendConfig,
     pub web: WebConfig,
     pub log: LogConfig,
 }
@@ -33,6 +34,11 @@ pub struct ServerConfig {
 pub struct WebConfig {
     pub port: u16,
     pub address: String,
+}
+
+#[derive(Default, Serialize, Deserialize, Debug)]
+pub struct FrontendConfig {
+    pub location: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

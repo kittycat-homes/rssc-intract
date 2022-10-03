@@ -1,4 +1,5 @@
 use rocket::{figment::Figment, fs::FileServer};
+use rocket_dyn_templates::Template;
 
 #[macro_use]
 extern crate rocket;
@@ -10,7 +11,7 @@ extern crate lazy_static;
 extern crate log as logmacro;
 
 /// this module defines the client api
-mod api;
+pub mod api;
 
 /// this module defines config and command line arguments
 mod config;
@@ -20,6 +21,9 @@ mod log;
 
 /// this is where the actual logic lives
 pub mod logic;
+
+/// this is responsible for serving web client
+mod web;
 
 lazy_static! {
     static ref CLI: config::Cli = config::get_cli();
@@ -46,12 +50,17 @@ fn launch() -> _ {
                 Figment::from(rocket::Config::default())
                     // settings for rocket
                     .merge(("port", &CONF.web.port))
-                    .merge(("address", &CONF.web.address)),
+                    .merge(("address", &CONF.web.address))
+                    .merge(("template_dir", &CONF.frontend.location)),
             )
-            // serve frontend
-            .mount("/", FileServer::from(&CONF.frontend.location))
             // serve api
             .mount("/api", api::routes())
+            .mount("/", web::routes())
+            .mount(
+                "/static",
+                FileServer::from(format!("{}/static", &CONF.frontend.location)),
+            )
+            .attach(Template::fairing())
         }
     }
 }

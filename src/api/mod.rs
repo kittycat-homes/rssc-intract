@@ -1,5 +1,5 @@
 use rocket::Route;
-mod auth;
+pub mod auth;
 
 /**
 (internal) returns all api routes
