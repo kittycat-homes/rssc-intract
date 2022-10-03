@@ -10,3 +10,5 @@ serde = { version = "1", features = ["derive"] }
 clap = { version = "4", features = ["derive"] }
 confy="0.5"
 lazy_static="1"
+log = "0.4.17"
+log4rs = "1.1.1"

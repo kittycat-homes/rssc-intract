@@ -1,4 +1,5 @@
 use clap::Parser;
+use log::LevelFilter;
 use serde::{Deserialize, Serialize};
 
 // defines all different subcommands
@@ -27,6 +28,7 @@ pub struct Cli {
 pub struct ServerConfig {
     pub frontend: FrontendConfig,
     pub web: WebConfig,
+    pub log: LogConfig,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug)]
@@ -40,6 +42,24 @@ pub struct FrontendConfig {
 pub struct WebConfig {
     pub port: u16,
     pub address: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct LogConfig {
+    pub path: String,
+    pub size: f64,
+    pub console_level: log::LevelFilter,
+    pub file_level: log::LevelFilter,
+}
+impl Default for LogConfig {
+    fn default() -> Self {
+        LogConfig {
+            path: String::from("/tmp/intract.log"),
+            size: 5.0,
+            console_level: log::LevelFilter::Info,
+            file_level: log::LevelFilter::Trace,
+        }
+    }
 }
 
 pub fn get_config_file() -> ServerConfig {
