@@ -12,6 +12,7 @@ pub enum Subcommand {
 #[command(version, about)]
 pub struct Cli {
     /// this is the config file you want to use,
+    ///
     /// specifying this overwrites the default path
     #[arg(short, long)]
     pub configpath: Option<String>,
