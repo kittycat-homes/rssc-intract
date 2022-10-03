@@ -1,0 +1,8 @@
+@font-face {
+    font-family: "Atkinson";
+    src: url("/static/fonts/AtkinsonHyperlegible-Regular.ttf");
+}
+
+* {
+    font-family: "Atkinson";
+}
