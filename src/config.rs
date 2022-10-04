@@ -28,6 +28,7 @@ pub struct ServerConfig {
     pub frontend: FrontendConfig,
     pub web: WebConfig,
     pub log: LogConfig,
+    pub jwt: JWTConfig,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug)]
@@ -57,6 +58,12 @@ impl Default for LogConfig {
             file_level: log::LevelFilter::Trace,
         }
     }
+}
+
+#[derive(Default, Serialize, Deserialize, Debug)]
+pub struct JWTConfig {
+    secret: String,
+    ttl: u64,
 }
 
 pub fn get_config_file() -> ServerConfig {

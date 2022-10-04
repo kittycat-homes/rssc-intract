@@ -23,3 +23,6 @@ console_level = "Info"
 # Default: Trace
 file_level = "Trace"
 
+[jwt]
+secret = "hunter2"
+ttl = 60

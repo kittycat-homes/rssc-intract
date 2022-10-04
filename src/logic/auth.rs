@@ -1,4 +1,3 @@
-use jsonwebtoken as jwt;
 use rocket::http::Status;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
