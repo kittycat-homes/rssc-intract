@@ -10,7 +10,7 @@
     <div id="content">{% block content %}{% endblock content %}</div>
     <div id="footer">
         {% block footer %}
-        <p> &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.</p>
+        {% include "premades/footer" %}
         {% endblock footer %}
     </div>
 </body>

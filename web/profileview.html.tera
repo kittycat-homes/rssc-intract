@@ -1,4 +1,4 @@
-{% extends "base" %}
+{% extends "premades/base" %}
 {% block title %}Index{% endblock title %}
 {% block head %}
     {{ super() }}
