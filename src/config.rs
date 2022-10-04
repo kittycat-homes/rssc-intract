@@ -62,8 +62,8 @@ impl Default for LogConfig {
 
 #[derive(Default, Serialize, Deserialize, Debug)]
 pub struct JWTConfig {
-    secret: String,
-    ttl: u64,
+    pub secret: String,
+    pub ttl: u64,
 }
 
 pub fn get_config_file() -> ServerConfig {

@@ -1,5 +1,5 @@
 use crate::CONF;
-use jsonwebtoken::{self as jwt, get_current_timestamp};
+use jsonwebtoken::{self as jwt, TokenData};
 use rocket::http::Status;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
@@ -23,17 +23,6 @@ pub enum Scope {
 pub struct Claims {
     pub userid: String,
     pub scopes: Vec<Scope>,
-    pub exp: u64,
-}
-
-impl Claims {
-    pub fn new(userid: String, scopes: Vec<Scope>) -> Claims {
-        Claims {
-            userid,
-            scopes,
-            exp: get_current_timestamp() + CONF.jwt.ttl,
-        }
-    }
 }
 
 /**
@@ -65,8 +54,8 @@ fn get_valid_users() -> HashSet<UserAuthData> {
 }
 
 #[derive(Deserialize, Serialize)]
-pub struct Token {
-    pub value: String,
+pub struct Key {
+    key: String,
 }
 
 /**
@@ -82,16 +71,20 @@ pub async fn authenticate_user(data: ClientAuthData) -> Result<String, (Status, 
     }
     jwt::encode(
         &jwt::Header::default(),
-        &Claims::new(data.user.userid, data.scopes),
+        &Claims {
+            userid: data.user.userid,
+            scopes: data.scopes,
+        },
         &JWTKENCODE,
     )
     .map_err(|e| (Status::InternalServerError, e.to_string()))
 }
 
 /**
- * authentication with jsonwebtoken, returns error if authentication failed
-*/
-pub fn authenticate_token(token: &String) -> Result<jwt::TokenData<Claims>, (Status, String)> {
+TODO
+authentication with webtoken
+**/
+pub fn authenticate_token(token: &String) -> Result<Claims>, (Status, String)> {
     jwt::decode::<Claims>(token, &JWTKDECODE, &jwt::Validation::default())
         .map_err(|e| (Status::Unauthorized, e.to_string()))
 }
