@@ -1690,6 +1690,7 @@ dependencies = [
 name = "rssc-intract"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "clap",
  "confy",
  "jsonwebtoken",
@@ -1699,6 +1700,8 @@ dependencies = [
  "rocket",
  "rocket_dyn_templates",
  "serde",
+ "thiserror",
+ "tokio",
 ]
 
 [[package]]

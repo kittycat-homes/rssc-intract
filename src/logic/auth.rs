@@ -1,33 +1,40 @@
+use jsonwebtoken as jwt;
+use rocket::http::Status;
 use serde::{Deserialize, Serialize};
-
-/**
-sets permission for what a client is allowed to do
-will be serialized to and from a String
-for example Read would become "Read"
-**/
-#[derive(Deserialize, Serialize)]
-pub enum Scope {
-    /// read userdata
-    Read,
-    /// change userdata
-    Write,
-}
+use std::collections::HashSet;
 
 /**
 data used to log a user in with password and userid
 **/
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, PartialEq, Eq, Hash)]
 pub struct UserAuthData {
     pub userid: String,
     pub pass: String,
-    pub scopes: Vec<Scope>,
+}
+
+/// get set of valid users
+fn get_valid_users() -> HashSet<UserAuthData> {
+    //TODO do not just authenticate zork
+    let zork = UserAuthData {
+        userid: "zork".to_string(),
+        pass: "zorkrules".to_string(),
+    };
+    HashSet::from([zork])
 }
 
 /**
-TODO
-initial authentication with username and password
-**/
-pub fn authenticate_user(data: UserAuthData) {}
+*initial authentication with username and password
+*TODO returns encoded token if credentials are true
+*/
+pub async fn authenticate_user(data: UserAuthData) -> Result<String, (Status, &'static str)> {
+    if !get_valid_users().contains(&data) {
+        return Err((
+            Status::Unauthorized,
+            "failed to authenticate user with these credentials",
+        ));
+    }
+    Ok("wow".to_string())
+}
 
 /**
 TODO
