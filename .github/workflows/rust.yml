@@ -1,0 +1,59 @@
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+name: Continuous integration
+
+jobs:
+  check:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+          components: rustfmt, clippy
+      - name: Set up cargo cache
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/            
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+      - name: Lint
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy -- -D warnings
+      - name: Test
+        run: cargo test
+      - name: Run cargo-tarpaulin
+        uses: actions-rs/tarpaulin@v0.1
+        with:
+          version: '0.15.0'
+          args: '-- --test-threads 1'
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: true
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage-report
+          path: cobertura.xml

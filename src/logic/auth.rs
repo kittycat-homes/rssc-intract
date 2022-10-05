@@ -29,7 +29,7 @@ impl<'r> FromRequest<'r> for User {
             Some(token) => {
                 info!("{}", token);
                 match authenticate_token(token) {
-                    Err(e) => Outcome::Failure((e.0, e.1.to_string())),
+                    Err(e) => Outcome::Failure((e.0, e.1)),
                     Ok(r) => Outcome::Success(User(r.claims)),
                 }
             }
