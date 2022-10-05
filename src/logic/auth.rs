@@ -1,6 +1,9 @@
 use crate::CONF;
 use jsonwebtoken::{self as jwt, get_current_timestamp};
-use rocket::http::Status;
+use rocket::{
+    http::Status,
+    request::{FromRequest, Outcome, Request},
+};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
@@ -8,6 +11,27 @@ lazy_static! {
     // set secret for encoding json web token
     static ref JWTKENCODE: jwt::EncodingKey = jwt::EncodingKey::from_secret(CONF.jwt.secret.as_ref());
     static ref JWTKDECODE: jwt::DecodingKey = jwt::DecodingKey::from_secret(CONF.jwt.secret.as_ref());
+}
+
+/**
+ * an existing and authenticed user
+ * provides [guard transparency](https://rocket.rs/v0.5-rc/guide/requests/#guard-transparency)
+ */
+pub struct User(Claims);
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for User {
+    type Error = String;
+
+    async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
+        match req.headers().get_one("Authentication") {
+            None => Outcome::Failure((Status::BadRequest, "no key provided".to_string())),
+            Some(token) => match authenticate_token(token) {
+                Err(e) => Outcome::Failure((e.0, e.1.to_string())),
+                Ok(r) => Outcome::Success(User(r.claims)),
+            },
+        }
+    }
 }
 
 /**
@@ -90,8 +114,9 @@ pub async fn authenticate_user(data: ClientAuthData) -> Result<String, (Status, 
 
 /**
  * authentication with jsonwebtoken, returns error if authentication failed
+ * TODO check if user exists in database
 */
-pub fn authenticate_token(token: &String) -> Result<jwt::TokenData<Claims>, (Status, String)> {
+pub fn authenticate_token(token: &str) -> Result<jwt::TokenData<Claims>, (Status, String)> {
     jwt::decode::<Claims>(token, &JWTKDECODE, &jwt::Validation::default())
         .map_err(|e| (Status::Unauthorized, e.to_string()))
 }

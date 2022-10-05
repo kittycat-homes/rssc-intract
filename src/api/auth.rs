@@ -1,4 +1,4 @@
-use crate::logic::auth::{authenticate_token, authenticate_user, Claims, ClientAuthData, Token};
+use crate::logic::auth::{authenticate_user, Claims, ClientAuthData, Token, User};
 use rocket::{http::Status, serde::json::Json, Route};
 
 pub fn routes() -> Vec<Route> {
@@ -14,10 +14,7 @@ pub async fn login(client_auth_data: Json<ClientAuthData>) -> Result<String, (St
     authenticate_user(client_auth_data.into_inner()).await
 }
 
-#[post("/v1/auth/whoami", format = "json", data = "<key>")]
-pub async fn whoami(key: Json<Token>) -> Result<Json<Claims>, (Status, String)> {
-    match authenticate_token(&key.into_inner().value) {
-        Ok(t) => Ok(Json(t.claims)),
-        Err(e) => Err(e),
-    }
+#[get("/v1/auth/whoami")]
+pub async fn whoami(_user: User) -> &'static str {
+    "hello"
 }
