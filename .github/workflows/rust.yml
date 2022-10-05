@@ -9,6 +9,10 @@ name: Continuous integration
 jobs:
   check:
     runs-on: ubuntu-latest
+    strategy:
+    matrix:
+      rust:
+        - stable
     steps:
       - name: Check out
         uses: actions/checkout@v3
@@ -16,7 +20,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ inputs.rust-version }}
+          toolchain: ${{ matrix.rust }}
           override: true
           components: rustfmt, clippy
       - name: Set up cargo cache
