@@ -8,11 +8,13 @@ name: Continuous integration
 
 jobs:
   check:
+
     runs-on: ubuntu-latest
     strategy:
-    matrix:
-      rust:
-        - stable
+      matrix:
+        rust:
+          - stable
+
     steps:
       - name: Check out
         uses: actions/checkout@v3
