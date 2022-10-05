@@ -24,12 +24,15 @@ impl<'r> FromRequest<'r> for User {
     type Error = String;
 
     async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
-        match req.headers().get_one("Authentication") {
+        match req.headers().get_one("token") {
             None => Outcome::Failure((Status::BadRequest, "no key provided".to_string())),
-            Some(token) => match authenticate_token(token) {
-                Err(e) => Outcome::Failure((e.0, e.1.to_string())),
-                Ok(r) => Outcome::Success(User(r.claims)),
-            },
+            Some(token) => {
+                info!("{}", token);
+                match authenticate_token(token) {
+                    Err(e) => Outcome::Failure((e.0, e.1.to_string())),
+                    Ok(r) => Outcome::Success(User(r.claims)),
+                }
+            }
         }
     }
 }

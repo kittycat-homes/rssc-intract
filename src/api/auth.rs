@@ -1,4 +1,4 @@
-use crate::logic::auth::{authenticate_user, Claims, ClientAuthData, Token, User};
+use crate::logic::auth::{authenticate_user, ClientAuthData, User};
 use rocket::{http::Status, serde::json::Json, Route};
 
 pub fn routes() -> Vec<Route> {
