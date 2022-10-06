@@ -28,7 +28,7 @@ pub struct ServerConfig {
     pub frontend: FrontendConfig,
     pub web: WebConfig,
     pub log: LogConfig,
-    pub jwt: JWTConfig,
+    pub security: SecurityConfig,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug)]
@@ -61,9 +61,10 @@ impl Default for LogConfig {
 }
 
 #[derive(Default, Serialize, Deserialize, Debug)]
-pub struct JWTConfig {
-    pub secret: String,
-    pub ttl: u64,
+pub struct SecurityConfig {
+    /// secret key used to prevent cookies from being decrypted
+    /// on the client side
+    pub secret_key: String,
 }
 
 pub fn get_config_file() -> ServerConfig {

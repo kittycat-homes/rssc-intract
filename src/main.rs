@@ -51,6 +51,7 @@ fn launch() -> _ {
                     // settings for rocket
                     .merge(("port", &CONF.web.port))
                     .merge(("address", &CONF.web.address))
+                    .merge(("secret_key", &CONF.security.secret_key))
                     .merge(("template_dir", &CONF.frontend.location)),
             )
             // serve api

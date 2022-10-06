@@ -23,6 +23,6 @@ console_level = "Info"
 # Default: Trace
 file_level = "Trace"
 
-[jwt]
-secret = "hunter2"
-ttl = 60
+[security]
+# used for encrypting cookies
+secret_key = "hPRYyVRiMyxpw5sBB1XeCMN1kFsDCqKvBi2QJxBVHQk="
