@@ -13,3 +13,4 @@ lazy_static="1"
 log = "0.4"
 log4rs = "1"
 chrono = "0.4"
+rand = { version = "0.8", features = ["getrandom", "std_rng"] }

@@ -1647,6 +1647,7 @@ dependencies = [
  "lazy_static",
  "log",
  "log4rs",
+ "rand",
  "rocket",
  "rocket_dyn_templates",
  "serde",

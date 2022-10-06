@@ -1,7 +1,9 @@
-use chrono::prelude::*;
+use rand::rngs::OsRng;
+use rand::RngCore;
 use rocket::http::{Cookie, CookieJar, Status};
-use rocket::outcome::IntoOutcome;
 use rocket::request::{self, FromRequest, Outcome, Request};
+
+const SESSION_COOKIE_NAME: &str = "session_id";
 
 #[derive(FromForm)]
 pub struct Login<'r> {
@@ -22,11 +24,13 @@ impl<'r> FromRequest<'r> for User {
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<User, Self::Error> {
         fn validate_session_id(id: &str) -> Outcome<User, &'static str> {
-            return Outcome::Success(User("blorbo".to_string()));
-            // check database if session id belongs to a user, otherwise:
-            Outcome::Failure((Status::Unauthorized, "could not validate session"))
+            info!("{}", id);
+            // TODO: check database if session id belongs to a user,
+            // return Outcome::Success(User("blorbo".to_string()));
+            // otherwise forward to login endpoint
+            Outcome::Forward(())
         }
-        let cookie = request.cookies().get_private("user_id");
+        let cookie = request.cookies().get_private(SESSION_COOKIE_NAME);
         match cookie {
             None => Outcome::Forward(()),
             Some(cookie) => validate_session_id(cookie.value()),
@@ -48,13 +52,6 @@ fn is_valid_login(username: &str, password: &str) -> bool {
     true
 }
 
-/**
- * should generate a unique session id
- */
-fn generate_session_id(username: &str) -> String {
-    format!("{}{}", username, Utc::now().timestamp())
-}
-
 pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), (Status, &'static str)> {
     if !is_valid_login(login.username, login.password) {
         warn!("failed to authenticate {}", login.username);
@@ -64,8 +61,8 @@ pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), (Status, &'static 
         ));
     }
     jar.add_private(Cookie::new(
-        "session_id",
-        generate_session_id(login.username),
+        SESSION_COOKIE_NAME,
+        OsRng.next_u64().to_string(),
     ));
     info!("{} authenticated themselves", login.username);
     Ok(())
