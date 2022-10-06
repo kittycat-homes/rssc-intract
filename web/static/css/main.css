@@ -21,6 +21,6 @@ p {
     color: var(--foreground);
 }
 
-h1, a {
+h1, h2, a {
     color: var(--accent);
 }
