@@ -13,14 +13,24 @@
     font-family: "Atkinson";
 }
 
-body {
+body, input {
     background-color: var(--background);
 }
 
-p {
+input {
+    border-color: var(--accent);
+    border-style: solid;
+}
+
+input:hover, input:active {
+    background-color: var(--accent);
+    color: var(--background);
+}
+
+p, label {
     color: var(--foreground);
 }
 
-h1, h2, a {
+h1, h2, a, input {
     color: var(--accent);
 }
