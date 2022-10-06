@@ -1,7 +1,7 @@
 use chrono::prelude::*;
 use rocket::http::{Cookie, CookieJar, Status};
 use rocket::outcome::IntoOutcome;
-use rocket::request::{self, FromRequest, Request};
+use rocket::request::{self, FromRequest, Outcome, Request};
 
 #[derive(FromForm)]
 pub struct Login<'r> {
@@ -14,19 +14,23 @@ pub struct Login<'r> {
  * [for security reasons](https://rocket.rs/v0.5-rc/guide/requests/#guard-transparency) there should not be any additonal constructors for this
  */
 #[derive(Debug)]
-pub struct User(usize);
+pub struct User(String);
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for User {
-    type Error = std::convert::Infallible;
+    type Error = &'static str;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<User, Self::Error> {
-        request
-            .cookies()
-            .get_private("session_id")
-            .and_then(|cookie| cookie.value().parse().ok())
-            .map(User)
-            .or_forward(())
+        fn validate_session_id(id: &str) -> Outcome<User, &'static str> {
+            return Outcome::Success(User("blorbo".to_string()));
+            // check database if session id belongs to a user, otherwise:
+            Outcome::Failure((Status::Unauthorized, "could not validate session"))
+        }
+        let cookie = request.cookies().get_private("user_id");
+        match cookie {
+            None => Outcome::Forward(()),
+            Some(cookie) => validate_session_id(cookie.value()),
+        }
     }
 }
 
