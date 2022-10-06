@@ -1,3 +1,4 @@
+#![allow(clippy::unnecessary_lazy_evaluations)]
 use rand::rngs::OsRng;
 use rand::RngCore;
 use rocket::http::{Cookie, CookieJar, Status};
