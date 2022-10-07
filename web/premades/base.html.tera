@@ -8,10 +8,10 @@
 </head>
 <body>
     <div id="content">{% block content %}{% endblock content %}</div>
-    <div id="footer">
+    <footer>
         {% block footer %}
         {% include "premades/footer" %}
         {% endblock footer %}
-    </div>
+    </footer>
 </body>
 </html>

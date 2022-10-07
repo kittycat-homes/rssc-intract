@@ -1,3 +1,5 @@
+/* colors and font */
+
 :root {
     --background: #1E1F1F;
     --foreground: #E4EFF1;
@@ -33,4 +35,9 @@ p, label {
 
 h1, h2, a, input {
     color: var(--accent);
+}
+
+body > footer {
+  position: fixed;
+  bottom: 0;
 }
