@@ -70,9 +70,13 @@ pub struct SecurityConfig {
 pub fn get_config_file() -> ServerConfig {
     // its ok to unwrap here since we need a working config file anyways
     match &crate::CLI.configpath {
-        Some(path) => confy::load_path(path).unwrap(),
+        Some(path) => {
+            confy::load_path(path).expect(&format!("could not load config from {}", path))
+        }
         // let confy decide where to find the config
-        _ => confy::load("rssc-intract", "config").unwrap(),
+        _ => {
+            confy::load("rssc-intract", "config").expect("could not load config from default path")
+        }
     }
 }
 
