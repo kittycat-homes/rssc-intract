@@ -1,5 +1,5 @@
 {% extends "premades/base" %}
-{% block title %}Index{% endblock title %}
+{% block title %}about{% endblock title %}
 {% block head %}
     {{ super() }}
 {% endblock head %}
