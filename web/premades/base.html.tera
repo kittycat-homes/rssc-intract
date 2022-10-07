@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     {% block head %}
+    <link rel="stylesheet" href="/static/css/tailwind.css" />
     <link rel="stylesheet" href="/static/css/main.css" />
     <title>{% block title %}{% endblock title %} | rssc-intract</title>
     {% endblock head %}
