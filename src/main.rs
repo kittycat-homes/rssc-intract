@@ -42,7 +42,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     match CLI.subcommand {
         // start the admin panel
         config::Subcommand::Admin => {
-            let _panel = admin::open().await?;
+            admin::open().await?;
             Ok(())
         }
         // start the server
