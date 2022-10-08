@@ -1,1 +1,3 @@
 /target
+/web/static/css/tailwind.css
+/node_modules
