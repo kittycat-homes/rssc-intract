@@ -45,11 +45,7 @@ lazy_static! {
 
 #[rocket::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    database::run_migrations().expect("couldn't update database"); // updates database
-    let user = database::models::NewUserBuilder::default()
-        .username("JOHNathan".to_string())
-        .build()?;
-    database::user::create_user(user);
+    database::run_migrations().expect("couldn't run database migrations"); // updates database
     match CLI.subcommand {
         // start the admin panel
         config::Subcommand::Admin => {

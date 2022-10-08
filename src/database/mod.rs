@@ -17,6 +17,9 @@ pub fn establish_connection() -> PgConnection {
 
 pub fn run_migrations() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
     let connection = &mut establish_connection();
+    if connection.has_pending_migration(MIGRATIONS)? {
+        info!("running database migrations!");
+    }
     connection.run_pending_migrations(MIGRATIONS)?;
 
     Ok(())
