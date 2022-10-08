@@ -29,6 +29,9 @@ mod web;
 /// the admin panel
 mod admin;
 
+///
+pub mod database;
+
 lazy_static! {
     static ref CLI: config::Cli = config::get_cli();
     // the config is dependant on the cli inputs
@@ -39,6 +42,7 @@ lazy_static! {
 
 #[rocket::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    database::run_migrations().expect("couldn't update database"); // updates database
     match CLI.subcommand {
         // start the admin panel
         config::Subcommand::Admin => {
