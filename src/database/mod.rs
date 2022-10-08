@@ -11,7 +11,7 @@ pub mod user;
 pub fn establish_connection() -> PgConnection {
     let database_url = &crate::CONF.database.url;
 
-    PgConnection::establish(&database_url)
+    PgConnection::establish(database_url)
         .unwrap_or_else(|_| panic!("error connecting at {}", database_url))
 }
 

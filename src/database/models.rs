@@ -50,12 +50,16 @@ pub struct User {
     pub salt: Option<String>,
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, Builder)]
 #[diesel(table_name = users)]
 pub struct NewUser {
     pub username: String,
+    #[builder(default)]
     pub display_name: Option<String>,
+    #[builder(default)]
     pub pfp: Option<String>,
+    #[builder(default)]
     pub hash: Option<String>,
+    #[builder(default)]
     pub salt: Option<String>,
 }

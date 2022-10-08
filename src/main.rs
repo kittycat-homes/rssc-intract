@@ -11,6 +11,9 @@ extern crate lazy_static;
 #[macro_use]
 extern crate log as logmacro;
 
+#[macro_use]
+extern crate derive_builder;
+
 /// this module defines the client api
 pub mod api;
 
@@ -43,6 +46,10 @@ lazy_static! {
 #[rocket::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     database::run_migrations().expect("couldn't update database"); // updates database
+    let user = database::models::NewUserBuilder::default()
+        .username("JOHNathan".to_string())
+        .build()?;
+    database::user::create_user(user);
     match CLI.subcommand {
         // start the admin panel
         config::Subcommand::Admin => {
