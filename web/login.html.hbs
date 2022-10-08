@@ -1,9 +1,6 @@
-{% extends "premades/base" %}
-{% block title %}login{% endblock title %}
-{% block head %}
-{{ super() }}
-{% endblock head %}
-{% block content %}
+<!-- this page simply shows a login form that sends a post request with username
+and password to the same url -->
+
 <form action="/login" method="post">
   <label for="username">username:</label><br>
   <input type="text" id="username" name="username" value=""><br>
@@ -11,4 +8,3 @@
   <input type="password" id="password" name="password" value=""><br><br>
   <input type="submit" value="login">
 </form>
-{% endblock content %}
