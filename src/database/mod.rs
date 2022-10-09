@@ -6,6 +6,7 @@ pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations");
 
 pub mod models;
 pub mod schema;
+pub mod sessionid;
 pub mod user;
 
 pub fn establish_connection() -> PgConnection {

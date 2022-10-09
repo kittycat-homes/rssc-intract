@@ -1,8 +1,30 @@
-use crate::database::models::*;
+use crate::database::schema::users;
 use crate::database::*;
 
-pub fn create_user(mut user: NewUser) -> User {
-    use crate::database::schema::users;
+/// struct that represents the users table
+#[derive(Queryable)]
+pub struct User {
+    pub username: String,
+    pub display_name: Option<String>,
+    pub hash: Option<String>,
+    pub salt: Option<String>,
+}
+
+/// struct for inserting new
+#[derive(Insertable, Builder)]
+#[diesel(table_name = users)]
+pub struct NewUser {
+    pub username: String,
+    #[builder(default)]
+    pub display_name: Option<String>,
+    #[builder(default)]
+    pub hash: Option<String>,
+    #[builder(default)]
+    pub salt: Option<String>,
+}
+
+/// create user from NewUser struct
+pub fn create(mut user: NewUser) -> QueryResult<User> {
     let connection = &mut establish_connection();
 
     user.username = user.username.to_lowercase();
@@ -10,22 +32,14 @@ pub fn create_user(mut user: NewUser) -> User {
     diesel::insert_into(users::table)
         .values(user)
         .get_result(connection)
-        .expect("error creating user")
 }
 
-pub fn get_user(username: String) -> User {
-    use crate::database::schema::users;
+/// return user struct
+pub fn get(username: String) -> QueryResult<User> {
     let connection = &mut establish_connection();
 
-    users::table
-        .find(username)
-        .first::<User>(connection)
-        .expect("couldnt load users")
+    users::table.find(username).first::<User>(connection)
 }
-
-// check if given session id already exists
-
-// check who session id belongs to
 
 // list of everyone user is following
 

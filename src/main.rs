@@ -32,7 +32,7 @@ mod web;
 /// the admin panel
 mod admin;
 
-///
+/// this module defines interactions with the database
 pub mod database;
 
 lazy_static! {
@@ -46,6 +46,7 @@ lazy_static! {
 #[rocket::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     database::run_migrations().expect("couldn't run database migrations"); // updates database
+
     match CLI.subcommand {
         // start the admin panel
         config::Subcommand::Admin => {
