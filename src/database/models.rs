@@ -3,8 +3,10 @@ use diesel::prelude::*;
 
 #[derive(Queryable)]
 pub struct Feed {
+    pub id: String,
     pub url: String,
     pub title: Option<String>,
+    pub last_updated: Option<std::time::SystemTime>,
 }
 
 #[derive(Queryable)]
@@ -15,10 +17,12 @@ pub struct Follow {
 
 #[derive(Queryable)]
 pub struct Post {
+    pub id: String,
     pub url: String,
     pub title: Option<String>,
     pub description: Option<String>,
-    pub feed_url: Option<String>,
+    pub feed_id: Option<String>,
+    pub time: std::time::SystemTime,
 }
 
 #[derive(Queryable)]
@@ -31,21 +35,30 @@ pub struct SessionID {
 
 #[derive(Queryable)]
 pub struct Share {
-    pub post_url: String,
+    pub post_id: String,
     pub username: String,
+    pub user_comment: Option<String>,
+    pub time: std::time::SystemTime,
 }
 
 #[derive(Queryable)]
 pub struct Subscription {
-    pub feed_url: String,
+    pub feed_id: String,
     pub username: String,
+}
+
+#[derive(Queryable)]
+pub struct Tag {
+    pub id: i32,
+    pub tag: String,
+    pub username: String,
+    pub post_id: String,
 }
 
 #[derive(Queryable)]
 pub struct User {
     pub username: String,
     pub display_name: Option<String>,
-    pub pfp: Option<String>,
     pub hash: Option<String>,
     pub salt: Option<String>,
 }
@@ -56,8 +69,6 @@ pub struct NewUser {
     pub username: String,
     #[builder(default)]
     pub display_name: Option<String>,
-    #[builder(default)]
-    pub pfp: Option<String>,
     #[builder(default)]
     pub hash: Option<String>,
     #[builder(default)]

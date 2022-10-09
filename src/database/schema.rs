@@ -1,9 +1,11 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
-    feeds (url) {
+    feeds (id) {
+        id -> Text,
         url -> Text,
         title -> Nullable<Text>,
+        last_updated -> Nullable<Timestamp>,
     }
 }
 
@@ -15,11 +17,13 @@ diesel::table! {
 }
 
 diesel::table! {
-    posts (url) {
+    posts (id) {
+        id -> Text,
         url -> Text,
         title -> Nullable<Text>,
         description -> Nullable<Text>,
-        feed_url -> Nullable<Text>,
+        feed_id -> Nullable<Text>,
+        time -> Timestamp,
     }
 }
 
@@ -33,16 +37,27 @@ diesel::table! {
 }
 
 diesel::table! {
-    shares (post_url, username) {
-        post_url -> Text,
+    shares (post_id, username) {
+        post_id -> Text,
+        username -> Text,
+        user_comment -> Nullable<Text>,
+        time -> Timestamp,
+    }
+}
+
+diesel::table! {
+    subscriptions (feed_id, username) {
+        feed_id -> Text,
         username -> Text,
     }
 }
 
 diesel::table! {
-    subscriptions (feed_url, username) {
-        feed_url -> Text,
+    tags (id) {
+        id -> Int4,
+        tag -> Text,
         username -> Text,
+        post_id -> Text,
     }
 }
 
@@ -50,14 +65,12 @@ diesel::table! {
     users (username) {
         username -> Text,
         display_name -> Nullable<Text>,
-        pfp -> Nullable<Text>,
         hash -> Nullable<Text>,
         salt -> Nullable<Text>,
     }
 }
 
 diesel::joinable!(follows -> users (following));
-diesel::joinable!(shares -> posts (post_url));
 
 diesel::allow_tables_to_appear_in_same_query!(
     feeds,
@@ -66,5 +79,6 @@ diesel::allow_tables_to_appear_in_same_query!(
     sessionid,
     shares,
     subscriptions,
+    tags,
     users,
 );

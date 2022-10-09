@@ -2,7 +2,6 @@
 CREATE TABLE users (
 	username TEXT PRIMARY KEY,
 	display_name TEXT,
-	pfp TEXT,
 	hash TEXT,
 	salt TEXT
 );
@@ -15,7 +14,7 @@ CREATE TABLE sessionid (
 	CONSTRAINT fk_user FOREIGN KEY (username) REFERENCES users(username)
 );
 
-CREATE TABLE following (
+CREATE TABLE follows (
 	username TEXT NOT NULL,
 	following TEXT NOT NULL,
 	CONSTRAINT pk_following PRIMARY KEY (username, following),
@@ -24,32 +23,47 @@ CREATE TABLE following (
 );
 
 CREATE TABLE feeds (
-	url TEXT PRIMARY KEY,
-	title TEXT
+	id TEXT PRIMARY KEY,
+	url TEXT NOT NULL,
+	title TEXT,
+	last_updated TIMESTAMP
 );
 
 CREATE TABLE posts (
-	url TEXT PRIMARY KEY,
+	id TEXT PRIMARY KEY,
+	url TEXT NOT NULL,
 	title TEXT,
 	description TEXT,
-	feed_url TEXT,
-	CONSTRAINT fk_feed FOREIGN KEY (feed_url) REFERENCES feeds(url)
+	feed_id TEXT,
+	time TIMESTAMP NOT NULL,
+	CONSTRAINT fk_feed FOREIGN KEY (feed_id) REFERENCES feeds(id)
 );
 
 CREATE TABLE shares (
-	post_url TEXT,
+	post_id TEXT,
 	username TEXT,
-	CONSTRAINT pk_shares PRIMARY KEY (post_url, username),
+	user_comment TEXT,
+	time TIMESTAMP NOT NULL,
+	CONSTRAINT pk_shares PRIMARY KEY (post_id, username),
 	CONSTRAINT fk_user FOREIGN KEY (username) REFERENCES users(username),
-	CONSTRAINT fk_post FOREIGN KEY (post_url) REFERENCES posts(url)
+	CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
 CREATE TABLE subscriptions (
-	feed_url TEXT NOT NULL,
+	feed_id TEXT NOT NULL,
 	username TEXT NOT NULL,
-	CONSTRAINT pk_subscriptions PRIMARY KEY (feed_url, username),
+	CONSTRAINT pk_subscriptions PRIMARY KEY (feed_id, username),
 	CONSTRAINT fk_user FOREIGN KEY (username) REFERENCES users(username),
-	CONSTRAINT fk_feed FOREIGN KEY (feed_url) REFERENCES feeds(url)
+	CONSTRAINT fk_feed FOREIGN KEY (feed_id) REFERENCES feeds(id)
+);
+
+CREATE TABLE tags (
+	id SERIAL PRIMARY KEY,
+	tag TEXT NOT NULL,
+	username TEXT NOT NULL,
+	post_id TEXT NOT NULL,
+	CONSTRAINT fk_user FOREIGN KEY (username) REFERENCES users(username),
+	CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts(id)
 );
 
 

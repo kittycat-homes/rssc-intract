@@ -1,8 +1,9 @@
 -- This file should undo anything in `up.sql`
-DROP TABLE users;
-DROP TABLE sessionid;
-DROP TABLE following;
-DROP TABLE feeds;
-DROP TABLE posts;
-DROP TABLE shares;
+DROP TABLE tags;
 DROP TABLE subscriptions;
+DROP TABLE shares;
+DROP TABLE posts;
+DROP TABLE feeds;
+DROP TABLE follows;
+DROP TABLE sessionid;
+DROP TABLE users;
