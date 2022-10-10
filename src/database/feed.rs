@@ -1,6 +1,4 @@
-use crate::database::models::*;
 use crate::database::*;
-use diesel::prelude::*;
 
 #[derive(Queryable)]
 pub struct Feed {

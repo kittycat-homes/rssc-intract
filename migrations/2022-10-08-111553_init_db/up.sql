@@ -15,11 +15,11 @@ CREATE TABLE sessionid (
 );
 
 CREATE TABLE follows (
-	username TEXT NOT NULL,
-	following TEXT NOT NULL,
-	CONSTRAINT pk_following PRIMARY KEY (username, following),
-	CONSTRAINT fk_user FOREIGN KEY (username) REFERENCES users(username),
-	CONSTRAINT fk_userfollowing FOREIGN KEY (following) REFERENCES users(username)
+	follower TEXT NOT NULL,
+	followed TEXT NOT NULL,
+	CONSTRAINT pk_following PRIMARY KEY (follower, followed),
+	CONSTRAINT fk_follower FOREIGN KEY (follower) REFERENCES users(username),
+	CONSTRAINT fk_followed FOREIGN KEY (followed) REFERENCES users(username)
 );
 
 CREATE TABLE feeds (

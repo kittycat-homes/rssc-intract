@@ -1,3 +1,5 @@
+use crate::database::*;
+
 #[derive(Queryable)]
 pub struct Share {
     pub post_id: String,

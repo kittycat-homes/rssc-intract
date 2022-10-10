@@ -1,5 +1,9 @@
-#[derive(Queryable)]
+use crate::database::schema::follows;
+use crate::database::*;
+
+#[derive(Insertable, Queryable)]
+#[diesel(table_name = follows)]
 pub struct Follow {
-    pub username: String,
-    pub following: String,
+    pub follower: String,
+    pub followed: String,
 }

@@ -4,9 +4,14 @@ use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use std::error::Error;
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations");
 
-pub mod models;
+pub mod feed;
+pub mod follow;
+pub mod post;
 pub mod schema;
 pub mod sessionid;
+pub mod share;
+pub mod subscription;
+pub mod tag;
 pub mod user;
 
 pub fn establish_connection() -> PgConnection {

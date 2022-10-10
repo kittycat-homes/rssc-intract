@@ -10,9 +10,9 @@ diesel::table! {
 }
 
 diesel::table! {
-    follows (username, following) {
-        username -> Text,
-        following -> Text,
+    follows (follower, followed) {
+        follower -> Text,
+        followed -> Text,
     }
 }
 
@@ -69,8 +69,6 @@ diesel::table! {
         salt -> Nullable<Text>,
     }
 }
-
-diesel::joinable!(follows -> users (following));
 
 diesel::allow_tables_to_appear_in_same_query!(
     feeds,

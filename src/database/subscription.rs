@@ -1,3 +1,5 @@
+use crate::database::*;
+
 #[derive(Queryable)]
 pub struct Subscription {
     pub feed_id: String,

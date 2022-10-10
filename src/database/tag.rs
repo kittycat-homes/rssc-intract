@@ -1,3 +1,5 @@
+use crate::database::*;
+
 #[derive(Queryable)]
 pub struct Tag {
     pub id: i32,
