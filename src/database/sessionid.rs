@@ -23,13 +23,13 @@ pub struct UpdateSessionID {
     pub name: Option<String>,
 }
 
-/// returns sessionID
+/// returns sessionID (WORKS)
 pub fn get(id: String) -> QueryResult<SessionID> {
     let connection = &mut establish_connection();
     sessionid::table.find(id).first::<SessionID>(connection)
 }
 
-/// check who session id belongs to
+/// check who session id belongs to (WORKS)
 pub fn belongs_to(id: String) -> QueryResult<User> {
     use crate::database::schema::users;
     let connection = &mut establish_connection();
@@ -42,7 +42,7 @@ pub fn belongs_to(id: String) -> QueryResult<User> {
     users::table.find(user).first::<User>(connection)
 }
 
-/// create sessionid
+/// create sessionid (WORKS)
 pub fn create(id: SessionID) -> QueryResult<SessionID> {
     let connection = &mut establish_connection();
 
@@ -51,14 +51,14 @@ pub fn create(id: SessionID) -> QueryResult<SessionID> {
         .get_result(connection)
 }
 
-/// deletes sessionid
+/// deletes sessionid (WORKS)
 pub fn delete(id: String) -> QueryResult<usize> {
     let connection = &mut establish_connection();
 
     diesel::delete(sessionid::table.find(id)).execute(connection)
 }
 
-/// update sessionid
+/// update sessionid (WORKS)
 pub fn update(id: String, sessionid: UpdateSessionID) -> QueryResult<SessionID> {
     let connection = &mut establish_connection();
 

@@ -13,7 +13,7 @@ pub struct Share {
     pub time: std::time::SystemTime,
 }
 
-/// create new share
+/// create new share (WORKS)
 pub fn create(share: Share) -> QueryResult<Share> {
     let connection = &mut establish_connection();
 
@@ -22,7 +22,7 @@ pub fn create(share: Share) -> QueryResult<Share> {
         .get_result(connection)
 }
 
-/// delete share
+/// delete share (WORKS)
 pub fn delete(post_id: String, username: String) -> QueryResult<usize> {
     let connection = &mut establish_connection();
 
@@ -34,14 +34,31 @@ pub fn delete(post_id: String, username: String) -> QueryResult<usize> {
     .execute(connection)
 }
 
-/// get all shares from user's friends
-pub fn get_friend_shares(username: String) -> QueryResult<Vec<Post>> {
-    use crate::database::schema::{posts, users};
+/// get share from all user's friends (WORKS)
+pub fn get_shares_from_friend(username: String) -> QueryResult<Vec<Share>> {
+    use crate::database::schema::follows;
     let connection = &mut establish_connection();
 
-    users::table
-        .inner_join(shares::table.on(shares::username.eq(users::username)))
-        .filter(shares::username.eq(username))
+    follows::table
+        .filter(follows::follower.eq(username))
+        .inner_join(shares::table.on(shares::username.eq(follows::followed)))
+        .select((
+            shares::post_id,
+            shares::username,
+            shares::user_comment,
+            shares::time,
+        ))
+        .load::<Share>(connection)
+}
+
+/// get post from all shares from user's friends (WORKS)
+pub fn get_posts_from_friend(username: String) -> QueryResult<Vec<Post>> {
+    use crate::database::schema::{follows, posts};
+    let connection = &mut establish_connection();
+
+    follows::table
+        .filter(follows::follower.eq(username))
+        .inner_join(shares::table.on(shares::username.eq(follows::followed)))
         .inner_join(posts::table.on(posts::id.eq(shares::post_id)))
         .select((
             posts::id,
@@ -51,14 +68,19 @@ pub fn get_friend_shares(username: String) -> QueryResult<Vec<Post>> {
             posts::feed_id,
             posts::time,
         ))
+        .distinct()
         .load::<Post>(connection)
 }
 
-/// get amount of shares from user's friends for a given post
-pub fn get_amount_shares(post_id: String) -> QueryResult<usize> {
+/// get amount of shares from user's friends for a given post (WORKS)
+pub fn get_amount_shares(post_id: String, username: String) -> QueryResult<i64> {
+    use crate::database::schema::follows;
     let connection = &mut establish_connection();
 
-    shares::table
+    follows::table
+        .filter(follows::follower.eq(username))
+        .inner_join(shares::table.on(shares::username.eq(follows::followed)))
         .filter(shares::post_id.eq(post_id))
-        .execute(connection)
+        .count()
+        .get_result(connection)
 }

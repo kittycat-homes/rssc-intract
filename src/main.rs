@@ -47,6 +47,7 @@ lazy_static! {
 async fn main() -> Result<(), Box<dyn Error>> {
     database::run_migrations().expect("couldn't run database migrations"); // updates database
 
+    database::user::delete("johnathan".to_string())?;
     match CLI.subcommand {
         // start the admin panel
         config::Subcommand::Admin => {

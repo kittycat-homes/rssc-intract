@@ -22,7 +22,7 @@ pub struct UpdateFeed {
     pub last_updated: Option<std::time::SystemTime>,
 }
 
-/// create feed from feed struct
+/// create feed from feed struct (WORKS)
 pub fn create(feed: Feed) -> QueryResult<Feed> {
     let connection = &mut establish_connection();
 
@@ -31,7 +31,7 @@ pub fn create(feed: Feed) -> QueryResult<Feed> {
         .get_result(connection)
 }
 
-/// get feed struct from feed id
+/// get feed struct from feed id (WORKS)
 pub fn get(id: String) -> QueryResult<Feed> {
     let connection = &mut establish_connection();
 
@@ -39,7 +39,7 @@ pub fn get(id: String) -> QueryResult<Feed> {
 }
 
 /// delete feed (why?)
-/// returns number of things that were deleted
+/// returns number of things that were deleted (WORKS)
 pub fn delete(id: String) -> QueryResult<usize> {
     use crate::database::schema::{posts, subscriptions};
     let connection = &mut establish_connection();
@@ -52,7 +52,7 @@ pub fn delete(id: String) -> QueryResult<usize> {
     diesel::delete(feeds::table.find(id)).execute(connection)
 }
 
-/// update feed
+/// update feed (WORKS)
 pub fn update(id: String, feed: UpdateFeed) -> QueryResult<Feed> {
     let connection = &mut establish_connection();
 
@@ -61,7 +61,7 @@ pub fn update(id: String, feed: UpdateFeed) -> QueryResult<Feed> {
         .get_result(connection)
 }
 
-/// get posts from feed
+/// get posts from feed (WORKS)
 pub fn get_posts(feed_id: String) -> QueryResult<Vec<Post>> {
     use crate::database::schema::posts;
 

@@ -27,7 +27,7 @@ pub struct UpdateUser {
     pub salt: Option<String>,
 }
 
-/// create user from User struct
+/// create user from User struct (WORKS)
 pub fn create(mut user: User) -> QueryResult<User> {
     let connection = &mut establish_connection();
 
@@ -38,14 +38,14 @@ pub fn create(mut user: User) -> QueryResult<User> {
         .get_result(connection)
 }
 
-/// return user struct
+/// return user struct (WORKS)
 pub fn get(username: String) -> QueryResult<User> {
     let connection = &mut establish_connection();
 
     users::table.find(username).first::<User>(connection)
 }
 
-/// updates user using UpdateUser struct
+/// updates user using UpdateUser struct (WORKS)
 pub fn update(username: String, user: UpdateUser) -> QueryResult<User> {
     let connection = &mut establish_connection();
 
@@ -54,7 +54,7 @@ pub fn update(username: String, user: UpdateUser) -> QueryResult<User> {
         .get_result(connection)
 }
 
-/// deletes user
+/// deletes user (WORKS)
 pub fn delete(username: String) -> QueryResult<usize> {
     use crate::database::schema::{follows, sessionid, shares, subscriptions, tags};
     let connection = &mut establish_connection();
