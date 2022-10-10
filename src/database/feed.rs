@@ -1,13 +1,55 @@
+use crate::database::post::*;
+use crate::database::schema::feeds;
 use crate::database::*;
 
-#[derive(Queryable)]
+#[derive(Insertable, Queryable, Builder)]
+#[diesel(table_name = feeds)]
 pub struct Feed {
     pub id: String,
     pub url: String,
+    #[builder(default)]
     pub title: Option<String>,
+    #[builder(default)]
     pub last_updated: Option<std::time::SystemTime>,
 }
 
-// get posts from feed
+/// create feed from feed struct
+pub fn create(feed: Feed) -> QueryResult<Feed> {
+    let connection = &mut establish_connection();
 
-// get feed information
+    diesel::insert_into(feeds::table)
+        .values(feed)
+        .get_result(connection)
+}
+
+/// get feed struct from feed id
+pub fn get(id: String) -> QueryResult<Feed> {
+    let connection = &mut establish_connection();
+
+    feeds::table.find(id).first::<Feed>(connection)
+}
+
+/// delete feed (why?)
+/// returns number of things that were deleted
+pub fn delete(id: String) -> QueryResult<usize> {
+    use crate::database::schema::{posts, subscriptions};
+    let connection = &mut establish_connection();
+
+    diesel::delete(posts::table.filter(posts::feed_id.eq(&id))).execute(connection)?;
+
+    diesel::delete(subscriptions::table.filter(subscriptions::feed_id.eq(&id)))
+        .execute(connection)?;
+
+    diesel::delete(feeds::table.find(id)).execute(connection)
+}
+
+/// get posts from feed
+pub fn get_posts(feed_id: String) -> QueryResult<Vec<Post>> {
+    use crate::database::schema::posts;
+
+    let connection = &mut establish_connection();
+
+    posts::table
+        .filter(posts::feed_id.eq(feed_id))
+        .load::<Post>(connection)
+}

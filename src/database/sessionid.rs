@@ -3,18 +3,9 @@ use crate::database::user::User;
 use crate::database::*;
 
 /// struct that represents the sessionid table
-#[derive(Queryable)]
-pub struct SessionID {
-    pub id: String,
-    pub username: String,
-    pub last_active: Option<std::time::SystemTime>,
-    pub name: Option<String>,
-}
-
-/// struct for inserting new session ids
-#[derive(Insertable, Builder)]
+#[derive(Insertable, Queryable, Builder)]
 #[diesel(table_name = sessionid)]
-pub struct NewSessionID {
+pub struct SessionID {
     pub id: String,
     pub username: String,
     #[builder(default)]
@@ -43,10 +34,17 @@ pub fn belongs_to(id: String) -> QueryResult<User> {
 }
 
 /// create sessionid
-pub fn create(id: NewSessionID) -> QueryResult<SessionID> {
+pub fn create(id: SessionID) -> QueryResult<SessionID> {
     let connection = &mut establish_connection();
 
     diesel::insert_into(sessionid::table)
         .values(id)
         .get_result(connection)
+}
+
+/// deletes sessionid
+pub fn delete(id: String) -> QueryResult<usize> {
+    let connection = &mut establish_connection();
+
+    diesel::delete(sessionid::table.find(id)).execute(connection)
 }

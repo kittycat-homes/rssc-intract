@@ -1,5 +1,3 @@
-use crate::database::feed::*;
-use crate::database::follow::*;
 use crate::database::schema::users;
 use crate::database::*;
 
@@ -16,7 +14,7 @@ pub struct User {
     pub salt: Option<String>,
 }
 
-/// create user from NewUser struct
+/// create user from User struct
 pub fn create(mut user: User) -> QueryResult<User> {
     let connection = &mut establish_connection();
 
@@ -34,44 +32,29 @@ pub fn get(username: String) -> QueryResult<User> {
     users::table.find(username).first::<User>(connection)
 }
 
-/// list of everyone user is following
-pub fn get_follows(username: String) -> QueryResult<Vec<User>> {
-    use crate::database::schema::follows;
+/// deletes user
+pub fn delete(username: String) -> QueryResult<usize> {
+    use crate::database::schema::{follows, sessionid, shares, subscriptions, tags};
     let connection = &mut establish_connection();
 
-    users::table
-        .inner_join(follows::table.on(follows::followed.eq(users::username)))
-        .filter(follows::follower.eq(username))
-        .select((
-            users::username,
-            users::display_name,
-            users::hash,
-            users::salt,
-        ))
-        .load::<User>(connection)
-}
+    // clear username foreign key references
+    diesel::delete(
+        follows::table
+            .filter(follows::follower.eq(&username))
+            .or_filter(follows::followed.eq(&username)),
+    )
+    .execute(connection)?;
 
-/// follow user.  
-/// follower is the username of the one following
-/// followed is the username of the one being followed
-pub fn follow(follower: String, followed: String) -> QueryResult<Follow> {
-    use crate::database::schema::follows;
-    let connection = &mut establish_connection();
+    diesel::delete(subscriptions::table.filter(subscriptions::username.eq(&username)))
+        .execute(connection)?;
 
-    let follow = Follow { follower, followed };
+    diesel::delete(sessionid::table.filter(sessionid::username.eq(&username)))
+        .execute(connection)?;
 
-    diesel::insert_into(follows::table)
-        .values(follow)
-        .get_result(connection)
-}
+    diesel::delete(tags::table.filter(tags::username.eq(&username))).execute(connection)?;
 
-/// list of all the feeds a user is subscribed to
-pub fn get_feeds(username: String) -> QueryResult<Vec<Feed>> {
-    use crate::database::schema::{feeds, subscriptions};
-    let connection = &mut establish_connection();
-    feeds::table
-        .inner_join(subscriptions::table.on(subscriptions::feed_id.eq(feeds::id)))
-        .filter(subscriptions::username.eq(username))
-        .select((feeds::id, feeds::url, feeds::title, feeds::last_updated))
-        .load::<Feed>(connection)
+    diesel::delete(shares::table.filter(shares::username.eq(&username))).execute(connection)?;
+
+    // delete user
+    diesel::delete(users::table.find(username)).execute(connection)
 }
