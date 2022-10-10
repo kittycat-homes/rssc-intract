@@ -15,6 +15,19 @@ pub struct Post {
     pub time: std::time::SystemTime,
 }
 
+#[derive(AsChangeset, Builder)]
+#[diesel(table_name = posts)]
+pub struct UpdatePost {
+    #[builder(default)]
+    pub title: Option<String>,
+    #[builder(default)]
+    pub description: Option<String>,
+    #[builder(default)]
+    pub feed_id: Option<String>,
+    #[builder(default)]
+    pub time: Option<std::time::SystemTime>,
+}
+
 /// create post from post struct
 pub fn create(post: Post) -> QueryResult<Post> {
     let connection = &mut establish_connection();
@@ -42,4 +55,12 @@ pub fn remove(id: String) -> QueryResult<usize> {
     diesel::delete(shares::table.filter(shares::post_id.eq(&id))).execute(connection)?;
 
     diesel::delete(posts::table.find(id)).execute(connection)
+}
+
+pub fn update(id: String, post: UpdatePost) -> QueryResult<Post> {
+    let connection = &mut establish_connection();
+
+    diesel::update(posts::table.find(id))
+        .set(post)
+        .get_result(connection)
 }

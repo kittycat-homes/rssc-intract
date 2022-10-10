@@ -13,6 +13,15 @@ pub struct Feed {
     pub last_updated: Option<std::time::SystemTime>,
 }
 
+#[derive(AsChangeset, Builder)]
+#[diesel(table_name = feeds)]
+pub struct UpdateFeed {
+    #[builder(default)]
+    pub title: Option<String>,
+    #[builder(default)]
+    pub last_updated: Option<std::time::SystemTime>,
+}
+
 /// create feed from feed struct
 pub fn create(feed: Feed) -> QueryResult<Feed> {
     let connection = &mut establish_connection();
@@ -41,6 +50,15 @@ pub fn delete(id: String) -> QueryResult<usize> {
         .execute(connection)?;
 
     diesel::delete(feeds::table.find(id)).execute(connection)
+}
+
+/// update feed
+pub fn update(id: String, feed: UpdateFeed) -> QueryResult<Feed> {
+    let connection = &mut establish_connection();
+
+    diesel::update(feeds::table.find(id))
+        .set(feed)
+        .get_result(connection)
 }
 
 /// get posts from feed

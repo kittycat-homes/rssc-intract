@@ -14,6 +14,15 @@ pub struct SessionID {
     pub name: Option<String>,
 }
 
+#[derive(AsChangeset, Builder)]
+#[diesel(table_name = sessionid)]
+pub struct UpdateSessionID {
+    #[builder(default)]
+    pub last_active: Option<std::time::SystemTime>,
+    #[builder(default)]
+    pub name: Option<String>,
+}
+
 /// returns sessionID
 pub fn get(id: String) -> QueryResult<SessionID> {
     let connection = &mut establish_connection();
@@ -47,4 +56,13 @@ pub fn delete(id: String) -> QueryResult<usize> {
     let connection = &mut establish_connection();
 
     diesel::delete(sessionid::table.find(id)).execute(connection)
+}
+
+/// update sessionid
+pub fn update(id: String, sessionid: UpdateSessionID) -> QueryResult<SessionID> {
+    let connection = &mut establish_connection();
+
+    diesel::update(sessionid::table.find(id))
+        .set(sessionid)
+        .get_result(connection)
 }

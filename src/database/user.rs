@@ -2,10 +2,23 @@ use crate::database::schema::users;
 use crate::database::*;
 
 /// struct that represents the users table
-#[derive(Insertable, Queryable, Builder)]
+#[derive(Insertable, Queryable, Builder, AsChangeset)]
 #[diesel(table_name = users)]
 pub struct User {
     pub username: String,
+    #[builder(default)]
+    pub display_name: Option<String>,
+    #[builder(default)]
+    pub hash: Option<String>,
+    #[builder(default)]
+    pub salt: Option<String>,
+}
+
+/// struct used for updating user. None values means no change
+/// this struct is separate from User because we don't want to be able to update the primary key.
+#[derive(AsChangeset, Builder)]
+#[diesel(table_name = users)]
+pub struct UpdateUser {
     #[builder(default)]
     pub display_name: Option<String>,
     #[builder(default)]
@@ -32,6 +45,15 @@ pub fn get(username: String) -> QueryResult<User> {
     users::table.find(username).first::<User>(connection)
 }
 
+/// updates user using UpdateUser struct
+pub fn update(username: String, user: UpdateUser) -> QueryResult<User> {
+    let connection = &mut establish_connection();
+
+    diesel::update(users::table.find(username))
+        .set(user)
+        .get_result(connection)
+}
+
 /// deletes user
 pub fn delete(username: String) -> QueryResult<usize> {
     use crate::database::schema::{follows, sessionid, shares, subscriptions, tags};
@@ -44,17 +66,13 @@ pub fn delete(username: String) -> QueryResult<usize> {
             .or_filter(follows::followed.eq(&username)),
     )
     .execute(connection)?;
-
     diesel::delete(subscriptions::table.filter(subscriptions::username.eq(&username)))
         .execute(connection)?;
-
     diesel::delete(sessionid::table.filter(sessionid::username.eq(&username)))
         .execute(connection)?;
-
     diesel::delete(tags::table.filter(tags::username.eq(&username))).execute(connection)?;
-
     diesel::delete(shares::table.filter(shares::username.eq(&username))).execute(connection)?;
 
-    // delete user
+    // finally delete user
     diesel::delete(users::table.find(username)).execute(connection)
 }
