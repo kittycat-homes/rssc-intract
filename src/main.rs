@@ -47,25 +47,6 @@ lazy_static! {
 async fn main() -> Result<(), Box<dyn Error>> {
     database::run_migrations().expect("couldn't run database migrations"); // updates database
 
-    let new_user = database::user::UserBuilder::default()
-        .username("johnathan".to_string())
-        .build()?;
-
-    let new_user_two = database::user::UserBuilder::default()
-        .username("󱥢󱥾".to_string())
-        .build()?;
-
-    let user = database::user::create(new_user)?;
-    let user_two = database::user::create(new_user_two)?;
-
-    database::user::follow(user.username, user_two.username)?;
-
-    let users = database::user::get_follows("johnathan".to_string())?;
-
-    for user in users {
-        println!("{}", user.username);
-    }
-
     match CLI.subcommand {
         // start the admin panel
         config::Subcommand::Admin => {
