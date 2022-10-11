@@ -1740,6 +1740,7 @@ dependencies = [
  "rocket_dyn_templates",
  "rust-argon2",
  "serde",
+ "thiserror",
 ]
 
 [[package]]
