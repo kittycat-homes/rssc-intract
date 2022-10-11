@@ -6,11 +6,11 @@ pub fn main_menu() -> MenuPage {
     MenuPage {
         items: vec![
             MenuItem {
-                name: "users",
+                name: "users".to_string(),
                 function: || user::usermenu().open(),
             },
             MenuItem {
-                name: "quit",
+                name: "quit".to_string(),
                 function: || Ok(()),
             },
         ],

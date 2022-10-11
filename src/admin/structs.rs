@@ -14,7 +14,7 @@ impl MenuPage {
 
 pub struct MenuItem {
     pub function: fn() -> Result<(), Box<dyn std::error::Error>>,
-    pub name: &'static str,
+    pub name: String,
 }
 
 impl std::fmt::Display for MenuItem {

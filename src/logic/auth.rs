@@ -71,20 +71,41 @@ pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), (Status, &'static 
 }
 
 pub fn add_user(username: String, password: String) -> Result<(), Box<dyn std::error::Error>> {
+    let gen = generate_hash(password)?;
+
+    let user = db::user::UserBuilder::default()
+        .username(username)
+        .hash(Some(gen.0))
+        .salt(Some(gen.1))
+        .build()?;
+
+    // store user if everything is correct
+    let _r = db::user::create(user)?;
+    Ok(())
+}
+
+pub fn change_password(
+    username: String,
+    password: String,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let gen = generate_hash(password)?;
+    let update = db::user::UpdateUserBuilder::default()
+        .hash(Some(gen.0))
+        .salt(Some(gen.1))
+        .build()?;
+    let _user = db::user::update(username, update)?;
+    Ok(())
+}
+
+/**
+ * generate hash and salt for this password
+ */
+fn generate_hash(password: String) -> Result<(String, String), Box<dyn std::error::Error>> {
     let salt = OsRng.next_u64().to_string();
     let hash = argon2::hash_encoded(
         &password.into_bytes(),
         &salt.clone().into_bytes(),
         &argon2::Config::default(),
     )?;
-
-    let user = db::user::UserBuilder::default()
-        .username(username)
-        .hash(Some(hash))
-        .salt(Some(salt))
-        .build()?;
-
-    // store user if everything is correct
-    let _r = db::user::create(user)?;
-    Ok(())
+    Ok((hash, salt))
 }
