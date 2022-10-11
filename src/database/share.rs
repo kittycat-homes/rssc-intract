@@ -13,7 +13,7 @@ pub struct Share {
     pub time: std::time::SystemTime,
 }
 
-/// create new share (WORKS)
+/// create new share
 pub fn create(share: Share) -> QueryResult<Share> {
     let connection = &mut establish_connection();
 
@@ -22,7 +22,7 @@ pub fn create(share: Share) -> QueryResult<Share> {
         .get_result(connection)
 }
 
-/// delete share (WORKS)
+/// delete share
 pub fn delete(post_id: String, username: String) -> QueryResult<usize> {
     let connection = &mut establish_connection();
 
@@ -34,7 +34,7 @@ pub fn delete(post_id: String, username: String) -> QueryResult<usize> {
     .execute(connection)
 }
 
-/// get share from all user's friends (WORKS)
+/// get share from all user's friends
 pub fn get_shares_from_friend(username: String) -> QueryResult<Vec<Share>> {
     use crate::database::schema::follows;
     let connection = &mut establish_connection();
@@ -51,7 +51,7 @@ pub fn get_shares_from_friend(username: String) -> QueryResult<Vec<Share>> {
         .load::<Share>(connection)
 }
 
-/// get post from all shares from user's friends (WORKS)
+/// get post from all shares from user's friends
 pub fn get_posts_from_friend(username: String) -> QueryResult<Vec<Post>> {
     use crate::database::schema::{follows, posts};
     let connection = &mut establish_connection();
@@ -72,7 +72,7 @@ pub fn get_posts_from_friend(username: String) -> QueryResult<Vec<Post>> {
         .load::<Post>(connection)
 }
 
-/// get amount of shares from user's friends for a given post (WORKS)
+/// get amount of shares from user's friends for a given post
 pub fn get_amount_shares(post_id: String, username: String) -> QueryResult<i64> {
     use crate::database::schema::follows;
     let connection = &mut establish_connection();

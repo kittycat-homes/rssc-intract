@@ -9,7 +9,7 @@ pub struct Subscription {
     pub username: String,
 }
 
-/// list of all the feeds a user is subscribed to (WORKS)
+/// list of all the feeds a user is subscribed to
 pub fn get_subscriptions(username: String) -> QueryResult<Vec<Feed>> {
     use crate::database::schema::feeds;
     let connection = &mut establish_connection();
@@ -20,7 +20,7 @@ pub fn get_subscriptions(username: String) -> QueryResult<Vec<Feed>> {
         .load::<Feed>(connection)
 }
 
-/// subscribes user to feed (WORKS)
+/// subscribes user to feed
 pub fn subscribe(username: String, feed_id: String) -> QueryResult<Subscription> {
     let connection = &mut establish_connection();
 
@@ -31,7 +31,7 @@ pub fn subscribe(username: String, feed_id: String) -> QueryResult<Subscription>
         .get_result(connection)
 }
 
-/// unsubscribes user from feed (WORKS)
+/// unsubscribes user from feed
 pub fn unsubscribe(username: String, feed_id: String) -> QueryResult<usize> {
     let connection = &mut establish_connection();
 

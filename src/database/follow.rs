@@ -10,7 +10,7 @@ pub struct Follow {
     pub followed: String,
 }
 
-/// list of everyone user is following (DONE)
+/// list of everyone user is following
 pub fn get_follows(username: String) -> QueryResult<Vec<User>> {
     let connection = &mut establish_connection();
 
@@ -28,7 +28,7 @@ pub fn get_follows(username: String) -> QueryResult<Vec<User>> {
 
 /// follow user.  
 /// follower is the username of the one following
-/// followed is the username of the one being followed (DONE)
+/// followed is the username of the one being followed
 pub fn follow(follower: String, followed: String) -> QueryResult<Follow> {
     let connection = &mut establish_connection();
 

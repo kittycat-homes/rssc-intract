@@ -28,7 +28,7 @@ pub struct UpdatePost {
     pub time: Option<std::time::SystemTime>,
 }
 
-/// create post from post struct (WORKS)
+/// create post from post struct
 pub fn create(post: Post) -> QueryResult<Post> {
     let connection = &mut establish_connection();
 
@@ -37,7 +37,7 @@ pub fn create(post: Post) -> QueryResult<Post> {
         .get_result(connection)
 }
 
-/// get post struct from post id (WORKS)
+/// get post struct from post id
 pub fn get(id: String) -> QueryResult<Post> {
     let connection = &mut establish_connection();
 
@@ -45,7 +45,7 @@ pub fn get(id: String) -> QueryResult<Post> {
 }
 
 /// delete post
-/// returns number of things that were deleted (WORKS)
+/// returns number of things that were deleted
 pub fn delete(id: String) -> QueryResult<usize> {
     use crate::database::schema::{shares, tags};
     let connection = &mut establish_connection();
@@ -57,7 +57,7 @@ pub fn delete(id: String) -> QueryResult<usize> {
     diesel::delete(posts::table.find(id)).execute(connection)
 }
 
-/// update post (WORKS)
+/// update post
 pub fn update(id: String, post: UpdatePost) -> QueryResult<Post> {
     let connection = &mut establish_connection();
 
