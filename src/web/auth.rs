@@ -1,4 +1,4 @@
-use crate::logic::auth as logic;
+use crate::logic;
 use rocket::{
     form::Form,
     http::CookieJar,
@@ -17,11 +17,11 @@ pub fn routes() -> Vec<Route> {
 #[post("/login", data = "<login>")]
 fn post_login(
     jar: &CookieJar<'_>,
-    login: Form<logic::Login<'_>>,
+    login: Form<logic::auth::Login<'_>>,
 ) -> Result<Redirect, Flash<Redirect>> {
-    match logic::login(jar, login.into_inner()) {
+    match logic::auth::login(jar, login.into_inner()) {
         Ok(_) => Ok(Redirect::to("/")),
-        Err(e) => Err(Flash::error(Redirect::to("/login"), e.1)),
+        Err(_) => Err(Flash::error(Redirect::to("/login"), "failed to log in")),
     }
 }
 
@@ -29,7 +29,7 @@ fn post_login(
  * redirects user to front page if they are already logged in
  */
 #[get("/login")]
-fn login_redirect(_user: logic::User) -> Redirect {
+fn login_redirect(_session: logic::auth::Session) -> Redirect {
     Redirect::to("/")
 }
 

@@ -2,10 +2,21 @@
 use crate::database as db;
 use rand::rngs::OsRng;
 use rand::RngCore;
-use rocket::http::{Cookie, CookieJar, Status};
+use rocket::http::{Cookie, CookieJar};
 use rocket::request::{self, FromRequest, Outcome, Request};
+use std::error::Error;
 
 const SESSION_COOKIE_NAME: &str = "session_id";
+
+#[derive(thiserror::Error, Debug)]
+pub enum AuthenticationError {
+    #[error("validity of credentials could not be verified")]
+    IncorrectCredentials,
+    #[error("missing hash")]
+    MissingHash,
+    #[error("could not validate session")]
+    SessionError,
+}
 
 #[derive(FromForm)]
 pub struct Login<'r> {
@@ -18,20 +29,28 @@ pub struct Login<'r> {
  * [for security reasons](https://rocket.rs/v0.5-rc/guide/requests/#guard-transparency) there should not be any additonal constructors for this
  */
 #[derive(Debug)]
-pub struct User(String);
+pub struct Session {
+    pub id: String,
+    pub user: db::user::User,
+}
 
 #[rocket::async_trait]
-impl<'r> FromRequest<'r> for User {
-    type Error = &'static str;
+impl<'r> FromRequest<'r> for Session {
+    type Error = AuthenticationError;
 
-    async fn from_request(request: &'r Request<'_>) -> request::Outcome<User, Self::Error> {
-        fn validate_session_id(id: &str) -> Outcome<User, &'static str> {
-            info!("{}", id);
-            // TODO: check database if session id belongs to a user,
-            // return Outcome::Success(User("blorbo".to_string()));
-            // otherwise forward to login endpoint
-            Outcome::Forward(())
+    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Session, Self::Error> {
+        fn validate_session_id(id: &str) -> Outcome<Session, AuthenticationError> {
+            // check if id is valid by getting a user
+            let user = db::sessionid::belongs_to(id.to_string());
+            match user {
+                Err(_) => Outcome::Forward(()),
+                Ok(user) => Outcome::Success(Session {
+                    user,
+                    id: id.to_string(),
+                }),
+            }
         }
+
         let cookie = request.cookies().get_private(SESSION_COOKIE_NAME);
         match cookie {
             None => Outcome::Forward(()),
@@ -41,35 +60,44 @@ impl<'r> FromRequest<'r> for User {
 }
 
 /**
- * TODO: authenticate more users than just blorbo
  * TODO: support for oauth
  */
-fn is_valid_login(username: &str, password: &str) -> bool {
-    if username != "blorbo" {
-        return false;
-    }
-    if password != "blorboiscool" {
-        return false;
-    }
-    true
+fn is_valid_login(username: &str, password: &str) -> Result<bool, Box<dyn Error>> {
+    let user = db::user::get(username.to_string())?;
+    // hash of already existing user
+    let uhash = user.hash.ok_or(AuthenticationError::MissingHash)?;
+
+    let valid = argon2::verify_encoded(&uhash, &password.to_string().into_bytes())?;
+    Ok(valid)
 }
 
-pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), (Status, &'static str)> {
-    if !is_valid_login(login.username, login.password) {
+pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), Box<dyn Error>> {
+    if !is_valid_login(login.username, login.password)? {
         warn!("failed to authenticate {}", login.username);
-        return Err((
-            Status::BadRequest,
-            "could not match login information with valid info",
-        ));
+        return Err(AuthenticationError::IncorrectCredentials.into());
     }
-    jar.add_private(Cookie::new(
-        SESSION_COOKIE_NAME,
-        OsRng.next_u64().to_string(),
-    ));
+    info!("found valid login");
+
+    // cryptographically secure random number
+    let id = OsRng.next_u64();
+
+    // create builder for user id
+    let session = db::sessionid::SessionIDBuilder::default()
+        .username(login.username.to_string())
+        .id(id.to_string())
+        .last_active(std::time::SystemTime::now())
+        .build()?;
+
+    trace!("created session builder: id: {}", session.id);
+
+    // save userid to database
+    let _dbres = db::sessionid::create(session)?;
+    jar.add_private(Cookie::new(SESSION_COOKIE_NAME, id.to_string()));
     info!("{} authenticated themselves", login.username);
     Ok(())
 }
 
+/// add a new user to the database
 pub fn add_user(username: String, password: String) -> Result<(), Box<dyn std::error::Error>> {
     let gen = generate_hash(password)?;
 
@@ -84,6 +112,7 @@ pub fn add_user(username: String, password: String) -> Result<(), Box<dyn std::e
     Ok(())
 }
 
+/// change a users password
 pub fn change_password(
     username: String,
     password: String,
