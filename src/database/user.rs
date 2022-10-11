@@ -51,6 +51,14 @@ pub fn get_all() -> QueryResult<Vec<User>> {
     users::table.load::<User>(connection)
 }
 
+pub fn get_local() -> QueryResult<Vec<User>> {
+    let connection = &mut establish_connection();
+
+    users::table
+        .filter(users::hash.is_not_null())
+        .load::<User>(connection)
+}
+
 /// updates user using UpdateUser struct
 pub fn update(username: String, user: UpdateUser) -> QueryResult<User> {
     let connection = &mut establish_connection();
