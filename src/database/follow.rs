@@ -3,6 +3,7 @@ use crate::database::schema::users;
 use crate::database::user::*;
 use crate::database::*;
 
+/// struct for representing follows and inserting new follows
 #[derive(Insertable, Queryable)]
 #[diesel(table_name = follows)]
 pub struct Follow {
@@ -15,7 +16,10 @@ pub fn get_follows(username: String) -> QueryResult<Vec<User>> {
     let connection = &mut establish_connection();
 
     users::table
+        // inner join combines table of follows and table of users, specifically so that every
+        // specifically so that the table now consists only of users being followed by someone
         .inner_join(follows::table.on(follows::followed.eq(users::username)))
+        // filter so that only entries where the follower's name is username
         .filter(follows::follower.eq(username))
         .select((
             users::username,

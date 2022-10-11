@@ -5,7 +5,7 @@ diesel::table! {
         id -> Text,
         url -> Text,
         title -> Nullable<Text>,
-        last_updated -> Nullable<Timestamp>,
+        last_updated -> Timestamp,
     }
 }
 
@@ -31,7 +31,7 @@ diesel::table! {
     sessionid (id) {
         id -> Text,
         username -> Text,
-        last_active -> Nullable<Timestamp>,
+        last_active -> Timestamp,
         name -> Nullable<Text>,
     }
 }
@@ -55,7 +55,7 @@ diesel::table! {
 diesel::table! {
     tags (id) {
         id -> Int4,
-        tag -> Text,
+        value -> Text,
         username -> Text,
         post_id -> Text,
     }

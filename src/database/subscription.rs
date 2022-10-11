@@ -2,6 +2,7 @@ use crate::database::feed::*;
 use crate::database::schema::subscriptions;
 use crate::database::*;
 
+/// struct that represents subscriptions
 #[derive(Insertable, Queryable)]
 #[diesel(table_name = subscriptions)]
 pub struct Subscription {

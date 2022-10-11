@@ -1,6 +1,7 @@
 use crate::database::schema::posts;
 use crate::database::*;
 
+/// struct representing posts
 #[derive(Insertable, Queryable, Builder)]
 #[diesel(table_name = posts)]
 pub struct Post {
@@ -15,6 +16,7 @@ pub struct Post {
     pub time: std::time::SystemTime,
 }
 
+/// struct used for updating posts. None means no change
 #[derive(AsChangeset, Builder)]
 #[diesel(table_name = posts)]
 pub struct UpdatePost {
@@ -50,8 +52,8 @@ pub fn delete(id: String) -> QueryResult<usize> {
     use crate::database::schema::{shares, tags};
     let connection = &mut establish_connection();
 
+    // delete things which reference the post
     diesel::delete(tags::table.filter(tags::post_id.eq(&id))).execute(connection)?;
-
     diesel::delete(shares::table.filter(shares::post_id.eq(&id))).execute(connection)?;
 
     diesel::delete(posts::table.find(id)).execute(connection)

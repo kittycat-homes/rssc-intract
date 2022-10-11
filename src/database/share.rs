@@ -1,6 +1,7 @@
 use crate::database::post::Post;
 use crate::database::schema::shares;
 use crate::database::*;
+use std::time::SystemTime;
 
 /// struct that represents shares
 #[derive(Insertable, Queryable, Builder)]
@@ -10,7 +11,7 @@ pub struct Share {
     pub username: String,
     #[builder(default)]
     pub user_comment: Option<String>,
-    pub time: std::time::SystemTime,
+    pub time: SystemTime,
 }
 
 /// create new share
@@ -35,12 +36,15 @@ pub fn delete(post_id: String, username: String) -> QueryResult<usize> {
 }
 
 /// get share from all user's friends
-pub fn get_shares_from_friend(username: String) -> QueryResult<Vec<Share>> {
+pub fn get_shares_from_friends(username: String) -> QueryResult<Vec<Share>> {
     use crate::database::schema::follows;
     let connection = &mut establish_connection();
 
     follows::table
+        // filters to only show people username is following
         .filter(follows::follower.eq(username))
+        // combines shares table and follows table so that all shares with username in common with
+        // someone being followed show up
         .inner_join(shares::table.on(shares::username.eq(follows::followed)))
         .select((
             shares::post_id,
@@ -52,7 +56,7 @@ pub fn get_shares_from_friend(username: String) -> QueryResult<Vec<Share>> {
 }
 
 /// get post from all shares from user's friends
-pub fn get_posts_from_friend(username: String) -> QueryResult<Vec<Post>> {
+pub fn get_posts_from_friends(username: String) -> QueryResult<Vec<Post>> {
     use crate::database::schema::{follows, posts};
     let connection = &mut establish_connection();
 
@@ -68,6 +72,7 @@ pub fn get_posts_from_friend(username: String) -> QueryResult<Vec<Post>> {
             posts::feed_id,
             posts::time,
         ))
+        // only distinct elements
         .distinct()
         .load::<Post>(connection)
 }

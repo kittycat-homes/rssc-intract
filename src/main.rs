@@ -47,10 +47,6 @@ lazy_static! {
 async fn main() -> Result<(), Box<dyn Error>> {
     database::run_migrations().expect("couldn't run database migrations"); // updates database
 
-    for tag in database::tag::get_post_tags("post1".to_string(), "rawtess".to_string())? {
-        println!("{}", tag.tag,);
-    }
-
     match CLI.subcommand {
         // start the admin panel
         config::Subcommand::Admin => {

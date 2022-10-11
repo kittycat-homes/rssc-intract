@@ -9,7 +9,7 @@ CREATE TABLE users (
 CREATE TABLE sessionid (
 	id TEXT PRIMARY KEY,
 	username TEXT NOT NULL,
-	last_active TIMESTAMP,
+	last_active TIMESTAMP NOT NULL,
 	name TEXT,
 	CONSTRAINT fk_user FOREIGN KEY (username) REFERENCES users(username)
 );
@@ -26,7 +26,7 @@ CREATE TABLE feeds (
 	id TEXT PRIMARY KEY,
 	url TEXT NOT NULL,
 	title TEXT,
-	last_updated TIMESTAMP
+	last_updated TIMESTAMP NOT NULL
 );
 
 CREATE TABLE posts (
@@ -40,8 +40,8 @@ CREATE TABLE posts (
 );
 
 CREATE TABLE shares (
-	post_id TEXT,
-	username TEXT,
+	post_id TEXT NOT NULL,
+	username TEXT NOT NULL,
 	user_comment TEXT,
 	time TIMESTAMP NOT NULL,
 	CONSTRAINT pk_shares PRIMARY KEY (post_id, username),
@@ -59,7 +59,7 @@ CREATE TABLE subscriptions (
 
 CREATE TABLE tags (
 	id SERIAL PRIMARY KEY,
-	tag TEXT NOT NULL,
+	value TEXT NOT NULL,
 	username TEXT NOT NULL,
 	post_id TEXT NOT NULL,
 	CONSTRAINT fk_user FOREIGN KEY (username) REFERENCES users(username),

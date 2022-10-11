@@ -2,10 +2,11 @@ use crate::database::post::Post;
 use crate::database::schema::tags;
 use crate::database::*;
 
+/// struct for representing tags
 #[derive(Queryable)]
 pub struct Tag {
     pub id: i32,
-    pub tag: String,
+    pub value: String,
     pub username: String,
     pub post_id: String,
 }
@@ -14,7 +15,7 @@ pub struct Tag {
 #[derive(Insertable, Builder)]
 #[diesel(table_name = tags)]
 pub struct NewTag {
-    pub tag: String,
+    pub value: String,
     pub username: String,
     pub post_id: String,
 }
@@ -23,7 +24,7 @@ pub struct NewTag {
 pub fn create(mut tag: NewTag) -> QueryResult<Tag> {
     let connection = &mut establish_connection();
 
-    tag.tag = tag.tag.to_lowercase();
+    tag.value = tag.value.to_lowercase();
 
     diesel::insert_into(tags::table)
         .values(tag)
@@ -31,17 +32,25 @@ pub fn create(mut tag: NewTag) -> QueryResult<Tag> {
 }
 
 /// search tags
-pub fn search(search: String) -> QueryResult<Vec<Tag>> {
+pub fn search(search: String, username: String) -> QueryResult<Vec<Tag>> {
+    use crate::database::schema::follows;
     let connection = &mut establish_connection();
 
-    let pattern = format!("{}%", search);
+    let pattern = format!("%{}%", search);
 
-    tags::table
-        .filter(tags::tag.ilike(pattern))
+    follows::table
+        .filter(follows::follower.eq(username))
+        .inner_join(
+            tags::table.on(tags::username
+                .eq(follows::followed)
+                .or(tags::username.eq(follows::follower))),
+        )
+        .filter(tags::value.ilike(pattern))
+        .select((tags::id, tags::value, tags::username, tags::post_id))
         .load::<Tag>(connection)
 }
 
-/// search posts
+/// search posts (using what your friends have tagged it with)
 pub fn search_posts(search: String, username: String) -> QueryResult<Vec<Post>> {
     use crate::database::schema::{follows, posts};
     let connection = &mut establish_connection();
@@ -53,7 +62,7 @@ pub fn search_posts(search: String, username: String) -> QueryResult<Vec<Post>> 
                 .eq(follows::followed)
                 .or(tags::username.eq(follows::follower))),
         )
-        .filter(tags::tag.ilike(search))
+        .filter(tags::value.ilike(search))
         .inner_join(posts::table.on(posts::id.eq(tags::post_id)))
         .select((
             posts::id,
@@ -80,7 +89,7 @@ pub fn get_post_tags(post_id: String, username: String) -> QueryResult<Vec<Tag>>
                 .or(tags::username.eq(follows::follower))),
         )
         .filter(tags::post_id.eq(post_id))
-        .select((tags::id, tags::tag, tags::username, tags::post_id))
+        .select((tags::id, tags::value, tags::username, tags::post_id))
         .distinct()
         .load::<Tag>(connection)
 }

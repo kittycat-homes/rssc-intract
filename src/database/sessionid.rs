@@ -1,6 +1,7 @@
 use crate::database::schema::sessionid;
 use crate::database::user::User;
 use crate::database::*;
+use std::time::SystemTime;
 
 /// struct that represents the sessionid table
 #[derive(Insertable, Queryable, Builder)]
@@ -8,17 +9,17 @@ use crate::database::*;
 pub struct SessionID {
     pub id: String,
     pub username: String,
-    #[builder(default)]
-    pub last_active: Option<std::time::SystemTime>,
+    pub last_active: SystemTime,
     #[builder(default)]
     pub name: Option<String>,
 }
 
+/// struct for updating sessionids
 #[derive(AsChangeset, Builder)]
 #[diesel(table_name = sessionid)]
 pub struct UpdateSessionID {
     #[builder(default)]
-    pub last_active: Option<std::time::SystemTime>,
+    pub last_active: Option<SystemTime>,
     #[builder(default)]
     pub name: Option<String>,
 }
@@ -27,6 +28,15 @@ pub struct UpdateSessionID {
 pub fn get(id: String) -> QueryResult<SessionID> {
     let connection = &mut establish_connection();
     sessionid::table.find(id).first::<SessionID>(connection)
+}
+
+/// gets sessionids belonging to user
+pub fn get_from_user(username: String) -> QueryResult<Vec<SessionID>> {
+    let connection = &mut establish_connection();
+
+    sessionid::table
+        .filter(sessionid::username.eq(username))
+        .load::<SessionID>(connection)
 }
 
 /// check who session id belongs to
@@ -64,5 +74,14 @@ pub fn update(id: String, sessionid: UpdateSessionID) -> QueryResult<SessionID> 
 
     diesel::update(sessionid::table.find(id))
         .set(sessionid)
+        .get_result(connection)
+}
+
+/// update sessionid last_active
+pub fn update_time(id: String, time: SystemTime) -> QueryResult<SessionID> {
+    let connection = &mut establish_connection();
+
+    diesel::update(sessionid::table.find(id))
+        .set(sessionid::last_active.eq(time))
         .get_result(connection)
 }
