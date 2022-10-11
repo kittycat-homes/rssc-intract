@@ -62,15 +62,9 @@ fn userpicker(action: Action) -> Result<(), Box<dyn std::error::Error>> {
         .collect::<Vec<String>>();
     let index = FuzzySelect::new().items(&items).interact()?;
     match action {
-        Action::Delete => {
-            return confirm_delete(users[index].username.clone());
-        }
-        Action::List => {
-            return Ok(());
-        }
-        Action::ChangePw => {
-            return change_password(users[index].username.clone());
-        }
+        Action::Delete => confirm_delete(users[index].username.clone()),
+        Action::List => Ok(()),
+        Action::ChangePw => change_password(users[index].username.clone()),
     }
 }
 
