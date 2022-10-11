@@ -1,3 +1,4 @@
+use crate::database as db;
 use crate::logic::auth;
 use dialoguer::{Input, Password};
 
@@ -7,11 +8,15 @@ pub fn usermenu() -> MenuPage {
     MenuPage {
         items: vec![
             MenuItem {
-                name: "add user",
-                function: || add_user(),
+                name: "add user".to_string(),
+                function: add_user,
             },
             MenuItem {
-                name: "quit",
+                name: "delete users".to_string(),
+                function: || deletemenu()?.open(),
+            },
+            MenuItem {
+                name: "quit".to_string(),
                 function: || Ok(()),
             },
         ],
@@ -30,4 +35,25 @@ pub fn add_user() -> Result<(), Box<dyn std::error::Error>> {
         .allow_empty_password(false)
         .interact()?;
     auth::add_user(username, password)
+}
+
+/**
+ * shows a menu page with all users who have accounts
+ */
+fn deletemenu() -> Result<MenuPage, Box<dyn std::error::Error>> {
+    let users = db::user::get_all()?
+        .iter()
+        .map(|u| MenuItem {
+            function: || Ok(()),
+            name: u.username.clone(),
+        })
+        .collect::<Vec<MenuItem>>();
+    Ok(MenuPage { items: vec![] })
+}
+
+/**
+ * confirm if a user should be deleted
+ */
+fn confirm_delete(username: String) -> Result<(), Box<dyn std::error::Error>> {
+    Ok(())
 }
