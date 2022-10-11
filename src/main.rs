@@ -11,6 +11,9 @@ extern crate lazy_static;
 #[macro_use]
 extern crate log as logmacro;
 
+#[macro_use]
+extern crate derive_builder;
+
 /// this module defines the client api
 pub mod api;
 
@@ -29,6 +32,9 @@ mod web;
 /// the admin panel
 mod admin;
 
+/// this module defines interactions with the database
+pub mod database;
+
 lazy_static! {
     static ref CLI: config::Cli = config::get_cli();
     // the config is dependant on the cli inputs
@@ -42,11 +48,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     match CLI.subcommand {
         // start the admin panel
         config::Subcommand::Admin => {
+            database::run_migrations().expect("couldn't run database migrations"); // updates database
             admin::open().await?;
             Ok(())
         }
         // start the server
         config::Subcommand::Start => {
+            database::run_migrations().expect("couldn't run database migrations"); // updates database
             let _rocket = get_rocket().launch().await?;
             Ok(())
         }

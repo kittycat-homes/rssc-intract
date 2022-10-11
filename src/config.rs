@@ -30,6 +30,7 @@ pub struct ServerConfig {
     pub web: WebConfig,
     pub log: LogConfig,
     pub security: SecurityConfig,
+    pub database: DatabaseConfig,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug)]
@@ -66,6 +67,11 @@ pub struct SecurityConfig {
     /// secret key used to prevent cookies from being decrypted
     /// on the client side
     pub secret_key: String,
+}
+
+#[derive(Default, Serialize, Deserialize, Debug)]
+pub struct DatabaseConfig {
+    pub url: String,
 }
 
 pub fn get_config_file() -> ServerConfig {

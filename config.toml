@@ -26,3 +26,6 @@ file_level = "Trace"
 [security]
 # used for encrypting cookies
 secret_key = "hPRYyVRiMyxpw5sBB1XeCMN1kFsDCqKvBi2QJxBVHQk="
+
+[database]
+url = "postgres://username:password@localhost/intract"
