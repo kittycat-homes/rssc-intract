@@ -6,7 +6,6 @@ use rand::{thread_rng, Rng, RngCore};
 use rocket::http::{Cookie, CookieJar};
 use rocket::request::{self, FromRequest, Outcome, Request};
 use std::error::Error;
-use uuid::Uuid;
 
 const SESSION_COOKIE_NAME: &str = "session_id";
 

@@ -1741,7 +1741,6 @@ dependencies = [
  "rust-argon2",
  "serde",
  "thiserror",
- "uuid",
 ]
 
 [[package]]
@@ -2275,16 +2274,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f30360d7979f5e9c6e6cea48af192ea8fab4afb3cf72597154b8f08935bc9c7f"
 dependencies = [
  "traitobject",
-]
-
-[[package]]
-name = "uuid"
-version = "1.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "feb41e78f93363bb2df8b0e86a2ca30eed7806ea16ea0c790d757cf93f79be83"
-dependencies = [
- "atomic",
- "getrandom",
 ]
 
 [[package]]
