@@ -1,10 +1,12 @@
 #![allow(clippy::unnecessary_lazy_evaluations)]
 use crate::database as db;
+use rand::distributions::Alphanumeric;
 use rand::rngs::OsRng;
-use rand::RngCore;
+use rand::{thread_rng, Rng, RngCore};
 use rocket::http::{Cookie, CookieJar};
 use rocket::request::{self, FromRequest, Outcome, Request};
 use std::error::Error;
+use uuid::Uuid;
 
 const SESSION_COOKIE_NAME: &str = "session_id";
 
@@ -59,9 +61,7 @@ impl<'r> FromRequest<'r> for Session {
     }
 }
 
-/**
- * TODO: support for oauth
- */
+/// returns true if login is valid
 fn is_valid_login(username: &str, password: &str) -> Result<bool, Box<dyn Error>> {
     let user = db::user::get(username.to_string())?;
     // hash of already existing user
@@ -78,13 +78,13 @@ pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), Box<dyn Error>> {
     }
     info!("found valid login");
 
-    // cryptographically secure random number
-    let id = OsRng.next_u64();
+    let mut rng = thread_rng();
+    let id: String = (0..64).map(|_| rng.sample(Alphanumeric) as char).collect();
 
     // create builder for user id
     let session = db::sessionid::SessionIDBuilder::default()
         .username(login.username.to_string())
-        .id(id.to_string())
+        .id(id.to_owned())
         .last_active(std::time::SystemTime::now())
         .build()?;
 
@@ -92,7 +92,7 @@ pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), Box<dyn Error>> {
 
     // save userid to database
     let _dbres = db::sessionid::create(session)?;
-    jar.add_private(Cookie::new(SESSION_COOKIE_NAME, id.to_string()));
+    jar.add_private(Cookie::new(SESSION_COOKIE_NAME, id));
     info!("{} authenticated themselves", login.username);
     Ok(())
 }
