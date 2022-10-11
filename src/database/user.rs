@@ -45,6 +45,12 @@ pub fn get(username: String) -> QueryResult<User> {
     users::table.find(username).first::<User>(connection)
 }
 
+pub fn get_all() -> QueryResult<Vec<User>> {
+    let connection = &mut establish_connection();
+
+    users::table.load::<User>(connection)
+}
+
 /// updates user using UpdateUser struct
 pub fn update(username: String, user: UpdateUser) -> QueryResult<User> {
     let connection = &mut establish_connection();
