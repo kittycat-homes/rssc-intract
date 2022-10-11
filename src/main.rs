@@ -2,6 +2,8 @@ use rocket::{figment::Figment, fs::FileServer, Build, Rocket};
 use rocket_dyn_templates::Template;
 use std::error::Error;
 
+extern crate argon2;
+
 #[macro_use]
 extern crate rocket;
 

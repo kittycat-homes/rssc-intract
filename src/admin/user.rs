@@ -1,4 +1,4 @@
-use crate::database::user::*;
+use crate::logic::auth;
 use dialoguer::{Input, Password};
 
 use crate::admin::structs::*;
@@ -18,6 +18,9 @@ pub fn usermenu() -> MenuPage {
     }
 }
 
+/**
+ * opens a prompt that lets you add an additional user
+ */
 pub fn add_user() -> Result<(), Box<dyn std::error::Error>> {
     let username = Input::<String>::new()
         .with_prompt("username")
@@ -26,9 +29,5 @@ pub fn add_user() -> Result<(), Box<dyn std::error::Error>> {
         .with_prompt("password")
         .allow_empty_password(false)
         .interact()?;
-    let user = UserBuilder::default().username(username).
-        //TODO stores passwords in plaintext, horrible, get rid of this
-        hash(Some(password)).build()?;
-    let _r = create(user)?;
-    Ok(())
+    auth::add_user(username, password)
 }
