@@ -1,4 +1,5 @@
 #![allow(clippy::unnecessary_lazy_evaluations)]
+use crate::database as db;
 use rand::rngs::OsRng;
 use rand::RngCore;
 use rocket::http::{Cookie, CookieJar, Status};
@@ -66,5 +67,24 @@ pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), (Status, &'static 
         OsRng.next_u64().to_string(),
     ));
     info!("{} authenticated themselves", login.username);
+    Ok(())
+}
+
+pub fn add_user(username: String, password: String) -> Result<(), Box<dyn std::error::Error>> {
+    let salt = OsRng.next_u64().to_string();
+    let hash = argon2::hash_encoded(
+        &password.into_bytes(),
+        &salt.clone().into_bytes(),
+        &argon2::Config::default(),
+    )?;
+
+    let user = db::user::UserBuilder::default()
+        .username(username)
+        .hash(Some(hash))
+        .salt(Some(salt))
+        .build()?;
+
+    // store user if everything is correct
+    let _r = db::user::create(user)?;
     Ok(())
 }

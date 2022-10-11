@@ -2,6 +2,8 @@ use rocket::{figment::Figment, fs::FileServer, Build, Rocket};
 use rocket_dyn_templates::Template;
 use std::error::Error;
 
+extern crate argon2;
+
 #[macro_use]
 extern crate rocket;
 
@@ -49,8 +51,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         // start the admin panel
         config::Subcommand::Admin => {
             database::run_migrations().expect("couldn't run database migrations"); // updates database
-            admin::open().await?;
-            Ok(())
+            admin::main_menu().open()
         }
         // start the server
         config::Subcommand::Start => {
