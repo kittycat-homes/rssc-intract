@@ -135,3 +135,19 @@ fn generate_hash(password: String) -> Result<String, Box<dyn std::error::Error>>
     )?;
     Ok(hash)
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::logic::auth::generate_hash;
+
+    #[test]
+    fn test_hashgen() {
+        let password = "hunter2".to_string();
+        let hash = generate_hash(password.to_string()).unwrap();
+        let valid = argon2::verify_encoded(&hash, &password.as_bytes()).unwrap();
+
+        // test to see if hash is valid
+        assert!(valid);
+        assert_ne!(hash, password);
+    }
+}
