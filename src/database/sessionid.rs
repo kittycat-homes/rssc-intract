@@ -1,6 +1,7 @@
 use crate::database::schema::sessionid;
 use crate::database::user::User;
 use crate::database::*;
+use std::time::Duration;
 use std::time::SystemTime;
 
 /// struct that represents the sessionid table
@@ -84,4 +85,25 @@ pub fn update_time(id: String, time: SystemTime) -> QueryResult<SessionID> {
     diesel::update(sessionid::table.find(id))
         .set(sessionid::last_active.eq(time))
         .get_result(connection)
+}
+
+/// delete all sessionids belonging to user
+pub fn delete_user_sessionids(username: String) -> QueryResult<usize> {
+    let connection = &mut establish_connection();
+
+    diesel::delete(sessionid::table.filter(sessionid::username.eq(username))).execute(connection)
+}
+
+/// delete all sessionids older than a week
+pub fn delete_old() -> QueryResult<usize> {
+    let connection = &mut establish_connection();
+
+    diesel::delete(
+        sessionid::table.filter(
+            sessionid::last_active.lt(SystemTime::now()
+                .checked_sub(Duration::from_secs(7 * 24 * 60 * 60))
+                .unwrap_or_else(SystemTime::now)),
+        ),
+    )
+    .execute(connection)
 }

@@ -102,8 +102,7 @@ pub fn add_user(username: String, password: String) -> Result<(), Box<dyn std::e
 
     let user = db::user::UserBuilder::default()
         .username(username)
-        .hash(Some(gen.0))
-        .salt(Some(gen.1))
+        .hash(Some(gen))
         .build()?;
 
     // store user if everything is correct
@@ -118,8 +117,7 @@ pub fn change_password(
 ) -> Result<(), Box<dyn std::error::Error>> {
     let gen = generate_hash(password)?;
     let update = db::user::UpdateUserBuilder::default()
-        .hash(Some(gen.0))
-        .salt(Some(gen.1))
+        .hash(Some(gen))
         .build()?;
     let _user = db::user::update(username, update)?;
     Ok(())
@@ -128,12 +126,12 @@ pub fn change_password(
 /**
  * generate hash and salt for this password
  */
-fn generate_hash(password: String) -> Result<(String, String), Box<dyn std::error::Error>> {
+fn generate_hash(password: String) -> Result<String, Box<dyn std::error::Error>> {
     let salt = OsRng.next_u64().to_string();
     let hash = argon2::hash_encoded(
         &password.into_bytes(),
-        &salt.clone().into_bytes(),
+        &salt.into_bytes(),
         &argon2::Config::default(),
     )?;
-    Ok((hash, salt))
+    Ok(hash)
 }
