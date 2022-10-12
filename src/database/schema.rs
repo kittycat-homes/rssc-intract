@@ -66,7 +66,6 @@ diesel::table! {
         username -> Text,
         display_name -> Nullable<Text>,
         hash -> Nullable<Text>,
-        salt -> Nullable<Text>,
     }
 }
 

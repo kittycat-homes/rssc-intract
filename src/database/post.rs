@@ -1,5 +1,6 @@
 use crate::database::schema::posts;
 use crate::database::*;
+use std::time::SystemTime;
 
 /// struct representing posts
 #[derive(Insertable, Queryable, Builder)]
@@ -13,7 +14,7 @@ pub struct Post {
     pub description: Option<String>,
     #[builder(default)]
     pub feed_id: Option<String>,
-    pub time: std::time::SystemTime,
+    pub time: SystemTime,
 }
 
 /// struct used for updating posts. None means no change

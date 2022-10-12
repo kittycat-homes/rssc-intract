@@ -21,12 +21,7 @@ pub fn get_follows(username: String) -> QueryResult<Vec<User>> {
         .inner_join(follows::table.on(follows::followed.eq(users::username)))
         // filter so that only entries where the follower's name is username
         .filter(follows::follower.eq(username))
-        .select((
-            users::username,
-            users::display_name,
-            users::hash,
-            users::salt,
-        ))
+        .select((users::username, users::display_name, users::hash))
         .load::<User>(connection)
 }
 

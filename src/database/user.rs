@@ -10,8 +10,6 @@ pub struct User {
     pub display_name: Option<String>,
     #[builder(default)]
     pub hash: Option<String>,
-    #[builder(default)]
-    pub salt: Option<String>,
 }
 
 /// struct used for updating user. None values means no change
@@ -23,8 +21,6 @@ pub struct UpdateUser {
     pub display_name: Option<String>,
     #[builder(default)]
     pub hash: Option<String>,
-    #[builder(default)]
-    pub salt: Option<String>,
 }
 
 /// create user from User struct
