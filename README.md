@@ -5,6 +5,17 @@
 - clone the repo
 - run `build.sh`
 
+## setting up database
+install postgresql
+
+switch to the postgres user and create a user with `createuser --pwprompt username`
+
+create a database with `createdb -O username database`
+
+set database url in config file to `postgres://username:password@localhost/database`
+
+when running for the first time, it will automatically set up the database if it exists!
+
 ## running
 when running from the command line and not specifying a config path
 [confy](https://crates.io/crates/confy) will automatically look for a config file from your default location.
