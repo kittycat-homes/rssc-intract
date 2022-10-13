@@ -104,7 +104,7 @@ mod tests {
     #[test]
     fn test_postid_gen() {
         assert_eq!(
-            "hello world".to_string(),
+            "https://example.com".to_string(),
             decode_url(&encode_url("https://example.com")).unwrap()
         )
     }
