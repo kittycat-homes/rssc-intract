@@ -1,9 +1,9 @@
-use base64;
-use std::{error::Error, time::SystemTime};
-
-use rocket::FromForm;
+#![allow(clippy::unnecessary_lazy_evaluations)]
 
 use crate::database::{self as db, post::Post, share::Share, tag::NewTag};
+use base64;
+use rocket::FromForm;
+use std::{error::Error, time::SystemTime};
 
 #[derive(Debug, FromForm)]
 pub struct ShareForm<'r> {
@@ -69,7 +69,7 @@ impl ShareForm<'_> {
 /// takes a string just like you would get from an html form and parses it to tag values
 fn parse_into_tag(input: &str, username: &str, post_id: &str) -> Vec<NewTag> {
     input
-        .split(",")
+        .split(',')
         .filter_map(|v| {
             let value = v.trim();
             if value.is_empty() {
