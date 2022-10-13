@@ -18,7 +18,12 @@ fn new_redirect() -> Redirect {
 }
 
 #[post("/share/new", data = "<share>")]
-fn new_post(session: Session, share: Form<ShareForm<'_>>) {
-    let s = share.into_share(&session.user.username);
-    info!("new share {:?} with id: {:?}", share, s.post_id);
+async fn new_post(session: Session, share: Form<ShareForm<'_>>) -> Redirect {
+    match share.save(&session.user.username).await {
+        Ok(_) => Redirect::to(format!("/users/{}", session.user.username)),
+        Err(e) => {
+            error!("{}", e);
+            Redirect::to("")
+        }
+    }
 }

@@ -21,3 +21,4 @@ derive_builder = "0.11"
 rust-argon2 = "1"
 thiserror = "1"
 base64 = "0.13"
+url = {version = "2", features = ["serde"]}
