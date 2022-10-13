@@ -19,6 +19,6 @@ fn new_redirect() -> Redirect {
 
 #[post("/share/new", data = "<share>")]
 fn new_post(session: Session, share: Form<ShareForm<'_>>) {
-    trace!("new share {:?}", share);
-    let _s = share.into_share(&session.user.username);
+    let s = share.into_share(&session.user.username);
+    info!("new share {:?} with id: {:?}", share, s.post_id);
 }
