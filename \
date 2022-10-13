@@ -1,0 +1,9 @@
+<html lang="en">
+<body>
+<form action="/login" method="post">
+  <label for="url">url:</label><br>
+  <input type="text" id="url" name="url" value=""><br>
+  <input type="submit" value="make recommendation">
+</form>
+<body>
+</html>
