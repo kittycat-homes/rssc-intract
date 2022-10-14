@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Parser)]
 pub enum Subcommand {
     Start,
-    Admin,
+    Bridge,
 }
 
 /// this defines all the cli commands

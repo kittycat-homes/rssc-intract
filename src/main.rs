@@ -49,7 +49,7 @@ lazy_static! {
 async fn main() -> Result<(), Box<dyn Error>> {
     match CLI.subcommand {
         // start the admin panel
-        config::Subcommand::Admin => {
+        config::Subcommand::Bridge => {
             database::run_migrations().expect("couldn't run database migrations"); // updates database
             admin::main_menu().open()
         }

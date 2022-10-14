@@ -7,17 +7,17 @@ pub fn routes() -> Vec<Route> {
     routes![new, new_redirect, new_post]
 }
 
-#[get("/share/new")]
+#[get("/beacon/deploy")]
 fn new(_session: Session) -> Template {
     Template::render("new_share", context! {})
 }
 
-#[get("/share/new", rank = 2)]
+#[get("/beacon/deploy", rank = 2)]
 fn new_redirect() -> Redirect {
     Redirect::to("/login")
 }
 
-#[post("/share/new", data = "<share>")]
+#[post("/beacon/deploy", data = "<share>")]
 async fn new_post(session: Session, share: Form<ShareForm<'_>>) -> Redirect {
     match share.save(&session.user.username).await {
         Ok(_) => Redirect::to(format!("/users/{}", session.user.username)),
