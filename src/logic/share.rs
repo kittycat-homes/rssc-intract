@@ -68,7 +68,8 @@ impl ShareForm<'_> {
             url: url.to_string(),
             title: web::get_website_title(&url).await.ok(),
             description: Some(self.description.to_string()),
-            // TODO create a feed if this id doesn't exist yet
+            // this is a user created post and not from an rss feed
+            // thus no feed id is needed
             feed_id: None,
             time: SystemTime::now(),
         };
