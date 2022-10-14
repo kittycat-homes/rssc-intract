@@ -6,7 +6,7 @@ struct ProfileViewData {
     userid: String,
 }
 
-#[get("/users/<userid>")]
+#[get("/crew/<userid>")]
 pub fn profile(userid: String) -> Template {
     Template::render("profileview", &ProfileViewData { userid })
 }
