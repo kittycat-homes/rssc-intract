@@ -12,7 +12,7 @@ pub struct Tag {
 }
 
 /// we need a separate struct for new tags so that postgres can increment the id for us
-#[derive(Insertable, Builder)]
+#[derive(Insertable, Builder, Debug, PartialEq, Eq)]
 #[diesel(table_name = tags)]
 pub struct NewTag {
     pub value: String,
