@@ -1,6 +1,9 @@
 #![allow(clippy::unnecessary_lazy_evaluations)]
 
-use crate::database::{self as db, post::Post, share::Share, tag::NewTag};
+use crate::{
+    database::{self as db, post::Post, share::Share, tag::NewTag},
+    logic::web,
+};
 use base64;
 use rocket::FromForm;
 use std::{error::Error, time::SystemTime};
@@ -15,7 +18,7 @@ pub struct ShareForm<'r> {
 impl ShareForm<'_> {
     pub async fn save(&self, username: &str) -> Result<(), Box<dyn Error>> {
         let post = self.create_new_or_get_old_post().await?;
-        let _share = db::share::create(self.into_share(username, &post.id))?;
+        let _share = self.save_or_update_share(username, &post.id)?;
 
         for t in parse_into_tag(self.tags, username, &post.id) {
             let tag = db::tag::create(t)?;
@@ -32,6 +35,17 @@ impl ShareForm<'_> {
             user_comment: None,
             time: SystemTime::now(),
         }
+    }
+
+    pub fn save_or_update_share(
+        &self,
+        username: &str,
+        postid: &str,
+    ) -> Result<Share, Box<dyn Error>> {
+        let new = self.into_share(username, postid);
+        // first try saving this as a new share
+        let share = db::share::create(new)?;
+        Ok(share)
     }
 
     /**
@@ -51,9 +65,8 @@ impl ShareForm<'_> {
 
         let new = Post {
             id: encode_url(&url),
-            url,
-            // TODO fetch title from url
-            title: None,
+            url: url.to_string(),
+            title: web::get_website_title(&url).await.ok(),
             description: Some(self.description.to_string()),
             // TODO create a feed if this id doesn't exist yet
             feed_id: None,
