@@ -17,6 +17,8 @@ pub enum AuthenticationError {
     MissingHash,
     #[error("could not validate session")]
     SessionError,
+    #[error("password is missing!")]
+    NoPassword,
 }
 
 #[derive(FromForm)]
@@ -98,6 +100,9 @@ pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), Box<dyn Error>> {
 
 /// add a new user to the database
 pub fn add_user(username: String, password: String) -> Result<(), Box<dyn std::error::Error>> {
+    if password.is_empty() {
+        return Err(AuthenticationError::NoPassword)?;
+    }
     let gen = generate_hash(password)?;
 
     let user = db::user::UserBuilder::default()
@@ -115,6 +120,10 @@ pub fn change_password(
     username: String,
     password: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    if password.is_empty() {
+        return Err(AuthenticationError::NoPassword)?;
+    }
+
     let gen = generate_hash(password)?;
 
     // delete all current sessions
