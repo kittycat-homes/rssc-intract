@@ -2,7 +2,7 @@ use crate::logic::{
     auth::Session,
     settings::{PasswordSettings, ProfileSettings},
 };
-use rocket::{form::Form, outcome::Outcome, response::Redirect, Route};
+use rocket::{form::Form, response::Redirect, Route};
 use rocket_dyn_templates::{context, Template};
 use std::error::Error;
 

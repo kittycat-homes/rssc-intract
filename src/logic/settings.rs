@@ -1,3 +1,5 @@
+#![allow(clippy::unnecessary_lazy_evaluations)]
+
 use crate::database as db;
 use crate::logic::auth;
 use rocket::FromForm;
