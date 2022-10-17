@@ -17,6 +17,8 @@ pub enum AuthenticationError {
     MissingHash,
     #[error("could not validate session")]
     SessionError,
+    #[error("password is missing!")]
+    NoPassword,
 }
 
 #[derive(FromForm)]
@@ -61,7 +63,7 @@ impl<'r> FromRequest<'r> for Session {
 }
 
 /// returns true if login is valid
-fn is_valid_login(username: &str, password: &str) -> Result<bool, Box<dyn Error>> {
+pub fn is_valid_login(username: &str, password: &str) -> Result<bool, Box<dyn Error>> {
     let user = db::user::get(username.to_string())?;
     // hash of already existing user
     let uhash = user.hash.ok_or(AuthenticationError::MissingHash)?;
@@ -98,6 +100,9 @@ pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), Box<dyn Error>> {
 
 /// add a new user to the database
 pub fn add_user(username: String, password: String) -> Result<(), Box<dyn std::error::Error>> {
+    if password.is_empty() {
+        return Err(AuthenticationError::NoPassword)?;
+    }
     let gen = generate_hash(password)?;
 
     let user = db::user::UserBuilder::default()
@@ -115,7 +120,16 @@ pub fn change_password(
     username: String,
     password: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    if password.is_empty() {
+        return Err(AuthenticationError::NoPassword)?;
+    }
+
     let gen = generate_hash(password)?;
+
+    // delete all current sessions
+    db::sessionid::delete_user_sessionids(username.to_owned())?;
+
+    // update user
     let update = db::user::UpdateUserBuilder::default()
         .hash(Some(gen))
         .build()?;
