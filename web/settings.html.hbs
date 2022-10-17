@@ -1,0 +1,13 @@
+<form action="/settings/profile" method="post">
+  <label for="displayname">display name:</label><br>
+  <input type="text" id="displayname" name="displayname" value="{{ displayname }}"><br>
+  <input type="submit" value="change">
+</form>
+
+<form action="/settings/password" method="post">
+  <label for="new_password">new password:</label><br>
+  <input type="password" id="new_password" name="new_password" value=""><br>
+  <label for="old_password">old password:</label><br>
+  <input type="password" id="old_password" name="old_password" value=""><br>
+  <input type="submit" value="change password">
+</form>
