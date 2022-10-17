@@ -1,5 +1,5 @@
-use crate::logic::auth::Session;
-use rocket::{response::Redirect, Route};
+use crate::logic::{auth::Session, settings::ProfileSettings};
+use rocket::{form::Form, response::Redirect, Route};
 use rocket_dyn_templates::{context, Template};
 
 pub fn routes() -> Vec<Route> {
@@ -26,8 +26,9 @@ fn redirect_settings() -> Redirect {
     Redirect::to("/login")
 }
 
-#[post("/settings/profile")]
-fn change_profile_settings(_session: Session) -> Redirect {
+#[post("/settings/profile", data = "<settings>")]
+fn change_profile_settings(session: Session, settings: Form<ProfileSettings<'_>>) -> Redirect {
+    let _save = settings.save(&session.user.username);
     Redirect::to("/settings")
 }
 

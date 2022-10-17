@@ -61,7 +61,7 @@ impl<'r> FromRequest<'r> for Session {
 }
 
 /// returns true if login is valid
-fn is_valid_login(username: &str, password: &str) -> Result<bool, Box<dyn Error>> {
+pub fn is_valid_login(username: &str, password: &str) -> Result<bool, Box<dyn Error>> {
     let user = db::user::get(username.to_string())?;
     // hash of already existing user
     let uhash = user.hash.ok_or(AuthenticationError::MissingHash)?;
