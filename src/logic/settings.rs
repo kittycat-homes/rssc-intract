@@ -7,6 +7,8 @@ use std::error::Error;
 enum SettingsError {
     #[error("login could not be validated")]
     LoginInvalid,
+    #[error("no password set")]
+    NoPassword,
 }
 
 /**
@@ -42,6 +44,10 @@ pub struct PasswordSettings<'r> {
 
 impl PasswordSettings<'_> {
     pub fn change_password(&self, username: &str) -> Result<(), Box<dyn Error>> {
+        // dont allow empty passwords
+        if self.new_password.is_empty() {
+            return Err(SettingsError::NoPassword)?;
+        }
         // errors if the login is not valid
         if !auth::is_valid_login(username, self.password)? {
             return Err(SettingsError::LoginInvalid)?;

@@ -35,11 +35,14 @@ fn change_profile_settings(session: Session, settings: Form<ProfileSettings<'_>>
 fn change_password_settings(
     session: Session,
     settings: Form<PasswordSettings<'_>>,
-) -> Result<Redirect, Template> {
+) -> Result<Redirect, Redirect> {
     let save = settings.change_password(&session.user.username);
     match save {
         Ok(_) => Ok(Redirect::to("/login")),
-        Err(_) => Err(show(session, save)),
+        Err(e) => {
+            error!("{}", e);
+            Err(Redirect::to("/settings"))
+        }
     }
 }
 
