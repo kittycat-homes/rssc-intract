@@ -2,7 +2,7 @@ use crate::logic::{
     auth::Session,
     settings::{PasswordSettings, ProfileSettings},
 };
-use rocket::{form::Form, response::Redirect, Route};
+use rocket::{form::Form, outcome::Outcome, response::Redirect, Route};
 use rocket_dyn_templates::{context, Template};
 use std::error::Error;
 
@@ -32,9 +32,15 @@ fn change_profile_settings(session: Session, settings: Form<ProfileSettings<'_>>
 }
 
 #[post("/settings/password", data = "<settings>")]
-fn change_password_settings(session: Session, settings: Form<PasswordSettings<'_>>) -> Template {
+fn change_password_settings(
+    session: Session,
+    settings: Form<PasswordSettings<'_>>,
+) -> Result<Redirect, Template> {
     let save = settings.change_password(&session.user.username);
-    show(session, save)
+    match save {
+        Ok(_) => Ok(Redirect::to("/login")),
+        Err(_) => Err(show(session, save)),
+    }
 }
 
 fn show(session: Session, r: Result<(), Box<dyn Error>>) -> Template {
@@ -50,7 +56,7 @@ fn show(session: Session, r: Result<(), Box<dyn Error>>) -> Template {
 
 fn render_template(session: Session) -> Template {
     Template::render(
-        "usersettings",
+        "settings",
         context! {
             displayname: session.user.display_name,
         },
