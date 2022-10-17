@@ -116,6 +116,11 @@ pub fn change_password(
     password: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let gen = generate_hash(password)?;
+
+    // delete all current sessions
+    db::sessionid::delete_user_sessionids(username.to_owned())?;
+
+    // update user
     let update = db::user::UpdateUserBuilder::default()
         .hash(Some(gen))
         .build()?;
