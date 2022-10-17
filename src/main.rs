@@ -51,7 +51,17 @@ async fn main() -> Result<(), Box<dyn Error>> {
         // start the admin panel
         config::Subcommand::Bridge => {
             database::run_migrations().expect("couldn't run database migrations"); // updates database
-            admin::main_menu().open()
+            let res = admin::main_menu().open();
+            match &res {
+                Ok(_) => {
+                    println!("ok!");
+                    res
+                }
+                Err(e) => {
+                    println!("{}", e);
+                    res
+                }
+            }
         }
         // start the server
         config::Subcommand::Start => {
