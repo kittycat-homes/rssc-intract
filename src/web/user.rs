@@ -36,6 +36,8 @@ fn follow(data: Form<Id>, session: Session) -> Result<Redirect, Status> {
         }
     };
 
+    //TODO check if the person to follow actually exists
+
     match db::follow::follow(session.user.username.clone(), id.unparse()) {
         Ok(o) => o,
         Err(e) => {
