@@ -72,6 +72,15 @@ pub fn is_valid_login(username: &str, password: &str) -> Result<bool, Box<dyn Er
     Ok(valid)
 }
 
+pub fn logout(jar: &CookieJar<'_>, session: &Session) -> Result<(), Box<dyn Error>> {
+    // delete login cookie
+    jar.remove_private(Cookie::named(SESSION_COOKIE_NAME));
+
+    // make session invalid by deleting session from db
+    db::sessionid::delete(session.id.to_string())?;
+    Ok(())
+}
+
 pub fn login(jar: &CookieJar<'_>, login: Login) -> Result<(), Box<dyn Error>> {
     if !is_valid_login(login.username, login.password)? {
         warn!("failed to authenticate {}", login.username);
