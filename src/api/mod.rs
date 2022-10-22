@@ -1,8 +1,10 @@
 use rocket::Route;
 
+mod users;
+
 /**
 (internal) returns all api routes
 **/
 pub fn routes() -> Vec<Route> {
-    routes![]
+    [users::routes()].concat()
 }

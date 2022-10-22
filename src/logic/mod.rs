@@ -6,4 +6,5 @@ pub mod auth;
 pub mod settings;
 pub mod share;
 pub mod url;
+pub mod user;
 pub mod web;
