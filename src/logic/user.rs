@@ -9,6 +9,10 @@ fn massage_url(input: &str) -> String {
 }
 
 impl Userid {
+    /**
+     * try seperating a userid into a username and url
+     * if there is no url then we use just the username
+     */
     pub fn parse(from: &str) -> Self {
         let values = from.split_once('@');
 
