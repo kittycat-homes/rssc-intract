@@ -50,11 +50,18 @@ mod tests {
             }
         );
         assert_eq!(
+            Userid::parse("zork@http://example.com"),
+            Userid {
+                url: Some("example.com".to_string()),
+                name: "zork".to_string()
+            }
+        );
+        assert_eq!(
             Userid::parse("zork"),
             Userid {
                 url: None,
                 name: "zork".to_string()
             }
-        )
+        );
     }
 }
