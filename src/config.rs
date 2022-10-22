@@ -33,15 +33,30 @@ pub struct ServerConfig {
     pub database: DatabaseConfig,
 }
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct WebConfig {
     pub port: u16,
     pub address: String,
 }
+impl Default for WebConfig {
+    fn default() -> Self {
+        WebConfig {
+            port: 4000,
+            address: String::from("127.0.0.1"),
+        }
+    }
+}
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct FrontendConfig {
     pub location: String,
+}
+impl Default for FrontendConfig {
+    fn default() -> Self {
+        FrontendConfig {
+            location: String::from("web"),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
