@@ -3,7 +3,6 @@ use crate::web::errors;
 use rocket::{
     form::Form,
     http::CookieJar,
-    outcome::Outcome,
     response::{Flash, Redirect},
     Route,
 };
