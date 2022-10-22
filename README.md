@@ -1,7 +1,7 @@
 # rssc-intract
 
 ## building
-- install cargo and npm
+- install libssl-dev, libpq-dev, cargo and npm
 - clone the repo
 - run `build.sh`
 
