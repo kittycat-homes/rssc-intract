@@ -51,7 +51,11 @@ pub fn init_log(
 
     // creates the full configuration using log_file and stderr
     let config = Config::builder()
-        .appender(Appender::builder().build("log_file", Box::new(log_file)))
+        .appender(
+            Appender::builder()
+                .filter(Box::new(ThresholdFilter::new(file_level)))
+                .build("log_file", Box::new(log_file)),
+        )
         .appender(
             Appender::builder()
                 .filter(Box::new(ThresholdFilter::new(console_level)))
@@ -61,7 +65,7 @@ pub fn init_log(
             Root::builder()
                 .appender("log_file")
                 .appender("stderr")
-                .build(file_level),
+                .build(log::LevelFilter::Trace),
         )
         .unwrap();
 
