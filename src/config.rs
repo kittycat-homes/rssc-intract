@@ -77,16 +77,31 @@ impl Default for LogConfig {
     }
 }
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct SecurityConfig {
     /// secret key used to prevent cookies from being decrypted
     /// on the client side
+    /// https://api.rocket.rs/master/rocket/config/struct.SecretKey.html
     pub secret_key: String,
 }
+impl Default for SecurityConfig {
+    fn default() -> Self {
+        SecurityConfig {
+            secret_key: String::from("hPRYyVRiMyxpw5sBB1XeCMN1kFsDCqKvBi2QJxBVHQk="),
+        }
+    }
+}
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct DatabaseConfig {
     pub url: String,
+}
+impl Default for DatabaseConfig {
+    fn default() -> Self {
+        DatabaseConfig {
+            url: String::from("postgres://username:password@localhost/database"),
+        }
+    }
 }
 
 pub fn get_config_file() -> ServerConfig {
