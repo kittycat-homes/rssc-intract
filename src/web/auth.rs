@@ -1,4 +1,5 @@
 use crate::logic;
+use crate::web::errors;
 use rocket::{
     form::Form,
     http::CookieJar,
@@ -8,7 +9,7 @@ use rocket::{
 use rocket_dyn_templates::{context, Template};
 
 pub fn routes() -> Vec<Route> {
-    routes![post_login, login, login_redirect]
+    routes![post_login, login, login_redirect, logout]
 }
 
 /**
@@ -39,4 +40,17 @@ fn login_redirect(_session: logic::auth::Session) -> Redirect {
 #[get("/login", rank = 2)]
 fn login() -> Template {
     Template::render("login", context! {})
+}
+
+#[get("/logout")]
+fn logout(session: logic::auth::Session, jar: &CookieJar<'_>) -> Result<Redirect, Template> {
+    match logic::auth::logout(jar, &session) {
+        Ok(_) => Ok(Redirect::to("/login")),
+        Err(e) => {
+            error!("{}", e);
+            Err(errors::render_error(errors::ErrorContext {
+            message: "failed to properly log you out! your session cookie should have been deleted, but try manually clearing cookies just to be safe",
+        }))
+        }
+    }
 }
