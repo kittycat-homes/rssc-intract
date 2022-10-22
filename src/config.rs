@@ -33,15 +33,30 @@ pub struct ServerConfig {
     pub database: DatabaseConfig,
 }
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct WebConfig {
     pub port: u16,
     pub address: String,
 }
+impl Default for WebConfig {
+    fn default() -> Self {
+        WebConfig {
+            port: 4000,
+            address: String::from("127.0.0.1"),
+        }
+    }
+}
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct FrontendConfig {
     pub location: String,
+}
+impl Default for FrontendConfig {
+    fn default() -> Self {
+        FrontendConfig {
+            location: String::from("web"),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -62,16 +77,31 @@ impl Default for LogConfig {
     }
 }
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct SecurityConfig {
     /// secret key used to prevent cookies from being decrypted
     /// on the client side
+    /// https://api.rocket.rs/master/rocket/config/struct.SecretKey.html
     pub secret_key: String,
 }
+impl Default for SecurityConfig {
+    fn default() -> Self {
+        SecurityConfig {
+            secret_key: String::from("hPRYyVRiMyxpw5sBB1XeCMN1kFsDCqKvBi2QJxBVHQk="),
+        }
+    }
+}
 
-#[derive(Default, Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct DatabaseConfig {
     pub url: String,
+}
+impl Default for DatabaseConfig {
+    fn default() -> Self {
+        DatabaseConfig {
+            url: String::from("postgres://username:password@localhost/database"),
+        }
+    }
 }
 
 pub fn get_config_file() -> ServerConfig {
