@@ -46,8 +46,11 @@ fn login() -> Template {
 fn logout(session: logic::auth::Session, jar: &CookieJar<'_>) -> Result<Redirect, Template> {
     match logic::auth::logout(jar, &session) {
         Ok(_) => Ok(Redirect::to("/login")),
-        Err(_e) => Err(errors::render_error(errors::ErrorContext {
+        Err(e) => {
+            error!("{}", e);
+            Err(errors::render_error(errors::ErrorContext {
             message: "failed to properly log you out! your session cookie should have been deleted, but try manually clearing cookies just to be safe",
-        })),
+        }))
+        }
     }
 }
