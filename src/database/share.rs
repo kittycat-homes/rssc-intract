@@ -77,6 +77,24 @@ pub fn get_posts_from_friends(username: String) -> QueryResult<Vec<Post>> {
         .load::<Post>(connection)
 }
 
+/// gets all posts that a specific user has shared.
+pub fn get_shares_from_user(username: String) -> QueryResult<Vec<Post>> {
+    use crate::database::schema::posts;
+    let connection = &mut establish_connection();
+    shares::table
+        .filter(shares::username.eq(username))
+        .inner_join(posts::table.on(posts::id.eq(shares::post_id)))
+        .select((
+            posts::id,
+            posts::url,
+            posts::title,
+            posts::description,
+            posts::feed_id,
+            posts::time,
+        ))
+        .load::<Post>(connection)
+}
+
 /// get amount of shares from user's friends for a given post
 pub fn get_amount_shares(post_id: String, username: String) -> QueryResult<i64> {
     use crate::database::schema::follows;
