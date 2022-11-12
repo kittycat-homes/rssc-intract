@@ -81,7 +81,7 @@ impl Default for LogConfig {
 pub struct SecurityConfig {
     /// secret key used to prevent cookies from being decrypted
     /// on the client side
-    /// https://api.rocket.rs/master/rocket/config/struct.SecretKey.html
+    /// <https://api.rocket.rs/master/rocket/config/struct.SecretKey.html>
     pub secret_key: String,
 }
 impl Default for SecurityConfig {

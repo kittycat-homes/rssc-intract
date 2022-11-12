@@ -19,6 +19,8 @@ pub enum AuthenticationError {
     SessionError,
     #[error("password is missing!")]
     NoPassword,
+    #[error("username contains disallowed characters")]
+    EvilChars,
 }
 
 #[derive(FromForm)]
@@ -112,6 +114,13 @@ pub fn add_user(username: String, password: String) -> Result<(), Box<dyn std::e
     if password.is_empty() {
         return Err(AuthenticationError::NoPassword)?;
     }
+
+    // we need to not have ats in usernames since this is how we distinguish
+    // between remote users and local users
+    if username.contains('@') {
+        return Err(AuthenticationError::EvilChars)?;
+    }
+
     let gen = generate_hash(password)?;
 
     let user = db::user::UserBuilder::default()
@@ -167,7 +176,7 @@ mod tests {
     fn test_hashgen() {
         let password = "hunter2".to_string();
         let hash = generate_hash(password.to_string()).unwrap();
-        let valid = argon2::verify_encoded(&hash, &password.as_bytes()).unwrap();
+        let valid = argon2::verify_encoded(&hash, password.as_bytes()).unwrap();
 
         // test to see if hash is valid
         assert!(valid);

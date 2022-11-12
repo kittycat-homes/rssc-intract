@@ -1,3 +1,7 @@
+// this is fine since we actually expect to return errors fairly often
+// and the options page shouldnt be pinged that much anyway
+#![allow(clippy::result_large_err)]
+
 use crate::logic;
 use crate::web::errors;
 use rocket::{

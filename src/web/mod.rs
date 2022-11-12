@@ -12,6 +12,7 @@ pub fn routes() -> Vec<Route> {
         auth::routes(),
         share::routes(),
         settings::routes(),
+        user::routes(),
     ]
     .concat()
 }
