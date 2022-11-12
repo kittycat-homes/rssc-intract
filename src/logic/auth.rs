@@ -176,7 +176,7 @@ mod tests {
     fn test_hashgen() {
         let password = "hunter2".to_string();
         let hash = generate_hash(password.to_string()).unwrap();
-        let valid = argon2::verify_encoded(&hash, &password.as_bytes()).unwrap();
+        let valid = argon2::verify_encoded(&hash, password.as_bytes()).unwrap();
 
         // test to see if hash is valid
         assert!(valid);
