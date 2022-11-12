@@ -11,14 +11,14 @@ use std::{error::Error, time::SystemTime};
 #[derive(Debug, FromForm)]
 pub struct ShareForm<'r> {
     url: &'r str,
-    description: &'r str,
+    user_comment: Option<&'r str>,
     tags: &'r str,
 }
 
 impl ShareForm<'_> {
     pub async fn save(&self, username: &str) -> Result<(), Box<dyn Error>> {
         let post = self.create_new_or_get_old_post().await?;
-        let _share = self.save_or_update_share(username, &post.id)?;
+        let _share = self.save_or_update_share(username, &post.id, self.user_comment)?;
 
         for t in parse_into_tag(self.tags, username, &post.id) {
             let tag = db::tag::create(t)?;
@@ -28,11 +28,11 @@ impl ShareForm<'_> {
         Ok(())
     }
 
-    pub fn into_share(&self, username: &str, postid: &str) -> Share {
+    pub fn into_share(&self, username: &str, postid: &str, user_comment: Option<&str>) -> Share {
         Share {
             post_id: postid.to_string(),
             username: username.to_string(),
-            user_comment: None,
+            user_comment: user_comment.and_then(|x| Some(x.to_string())),
             time: SystemTime::now(),
         }
     }
@@ -41,8 +41,9 @@ impl ShareForm<'_> {
         &self,
         username: &str,
         postid: &str,
+        user_comment: Option<&str>,
     ) -> Result<Share, Box<dyn Error>> {
-        let new = self.into_share(username, postid);
+        let new = self.into_share(username, postid, user_comment);
         // first try saving this as a new share
         let share = db::share::create(new)?;
         Ok(share)
@@ -67,7 +68,8 @@ impl ShareForm<'_> {
             id: encode_url(&url),
             url: url.to_string(),
             title: web::get_website_title(&url).await.ok(),
-            description: Some(self.description.to_string()),
+            // TODO this should get fetched from the website
+            description: None,
             // this is a user created post and not from an rss feed
             // thus no feed id is needed
             feed_id: None,
