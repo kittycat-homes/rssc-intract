@@ -32,7 +32,7 @@ impl ShareForm<'_> {
         Share {
             post_id: postid.to_string(),
             username: username.to_string(),
-            user_comment: user_comment.and_then(|x| Some(x.to_string())),
+            user_comment: user_comment.map(|x| x.to_string()),
             time: SystemTime::now(),
         }
     }
