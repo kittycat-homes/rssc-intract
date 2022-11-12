@@ -1,3 +1,4 @@
+#![allow(clippy::unnecessary_lazy_evaluations)]
 use std::error::Error;
 
 #[derive(Debug, PartialEq, Eq, FromForm)]
