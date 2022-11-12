@@ -54,21 +54,17 @@ impl WebsiteInfo {
         let titletag: Selector = Selector::parse(r#"title"#).unwrap();
         let titles = parsed_content.select(&titletag).collect::<Vec<_>>();
 
-        let description_tag: Selector = Selector::parse(r#"meta[name="description"]"#).unwrap();
-        let descriptions = parsed_content.select(&description_tag).collect::<Vec<_>>();
+        let description_tag: Selector = Selector::parse(r#"input[name="foo"]"#).unwrap();
+        let descriptions = parsed_content.select(&description_tag);
 
         WebsiteInfo {
             title: titles.first().map(|f| f.inner_html()),
-            description: match descriptions.is_empty() {
-                true => None,
-                false => match descriptions[0].value().attr("content") {
-                    None => None,
-                    Some(e) => {
-                        info!("found description {}", e);
-                        Some(e.to_string())
-                    }
-                },
-            },
+            description: descriptions
+                .filter(|e| true)
+                .map(|e| e.value().attr("value"))
+                .collect::<Vec<_>>()
+                .first()
+                .map(|f| f.to_owned()),
         }
     }
 }

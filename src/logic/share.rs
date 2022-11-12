@@ -64,12 +64,13 @@ impl ShareForm<'_> {
             return Ok(old.unwrap());
         }
 
+        let website_info = web::WebsiteInfo::get(&url).await?;
+
         let new = Post {
             id: encode_url(&url),
             url: url.to_string(),
-            title: web::get_website_title(&url).await.ok(),
-            // TODO this should get fetched from the website
-            description: None,
+            title: website_info.title,
+            description: website_info.description,
             // this is a user created post and not from an rss feed
             // thus no feed id is needed
             feed_id: None,
