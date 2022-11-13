@@ -24,6 +24,7 @@ lazy_static! {
  * this stores information about a website such as
  * title and description
  */
+#[derive(Debug, PartialEq, Eq)]
 pub struct WebsiteInfo {
     pub description: Option<String>,
     pub title: Option<String>,
@@ -83,4 +84,34 @@ fn default_headers() -> HeaderMap {
     let mut headers = HeaderMap::new();
     headers.insert(header::ACCEPT, HeaderValue::from_static("text/html"));
     headers
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_parsing_html() {
+        assert_eq!(
+            WebsiteInfo::get_description_and_title(Html::new_document()),
+            WebsiteInfo {
+                title: None,
+                description: None
+            }
+        );
+        assert_eq!(
+            WebsiteInfo::get_description_and_title(Html::parse_document(
+                r"
+                <head>
+                <title>hello</title>
+                <meta name='description' content='world'>
+                </head>
+                "
+            )),
+            WebsiteInfo {
+                title: Some("hello".to_string()),
+                description: Some("world".to_string()),
+            }
+        )
+    }
 }
