@@ -3,6 +3,7 @@
 use crate::{
     database as db,
     logic::{self, auth::Session},
+    web::components::{Pages, ProfilePageProps},
 };
 use rocket::{
     form::Form,
@@ -11,6 +12,8 @@ use rocket::{
     Route,
 };
 use serde::Serialize;
+
+use super::components::render_page;
 
 mod userpage;
 
@@ -39,7 +42,9 @@ pub fn profile(username: String) -> Result<content::RawHtml<String>, Status> {
         }
     };
 
-    Ok(userpage::ProfilePage { user }.render())
+    Ok(render_page(Pages::UserPage {
+        props: ProfilePageProps { user },
+    }))
 }
 
 /// lets you follow a user with format user@url.example
