@@ -3,7 +3,7 @@
 use crate::{
     database as db,
     logic::{self, auth::Session},
-    web::components::{Pages, ProfilePageProps},
+    web::components::{profile_page, Pages},
 };
 use rocket::{
     form::Form,
@@ -14,8 +14,6 @@ use rocket::{
 use serde::Serialize;
 
 use super::components::render_page;
-
-mod userpage;
 
 pub fn routes() -> Vec<Route> {
     routes![follow]
@@ -43,7 +41,7 @@ pub fn profile(username: String) -> Result<content::RawHtml<String>, Status> {
     };
 
     Ok(render_page(Pages::ProfilePage {
-        props: ProfilePageProps { user },
+        props: profile_page::Props { user },
     }))
 }
 

@@ -3,7 +3,6 @@ mod about;
 mod auth;
 pub mod components;
 pub mod errors;
-pub mod rendering;
 mod settings;
 mod share;
 mod user;

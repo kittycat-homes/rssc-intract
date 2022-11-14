@@ -2,9 +2,10 @@ use rocket::response::content::RawHtml;
 use sycamore::reactive::Scope;
 use sycamore::view::View;
 use sycamore::web::SsrNode;
-use sycamore::{builder::prelude::*, component, render_to_string, view, Prop};
+use sycamore::{builder::prelude::*, component, render_to_string, view};
 
-use crate::database::user::User;
+pub mod profile_page;
+pub mod settings_page;
 
 /// renders a page to raw html
 pub fn render_page(page: Pages) -> RawHtml<String> {
@@ -14,17 +15,18 @@ pub fn render_page(page: Pages) -> RawHtml<String> {
     ))
 }
 
-#[derive(Prop)]
-pub struct ProfilePageProps {
-    pub user: User,
-}
-
 /**
  * lists avialable pages to render
  * these usually correspond to a route
  */
 pub enum Pages {
-    ProfilePage { props: ProfilePageProps },
+    /// a users profile, displaying their recent shares etc.
+    ProfilePage {
+        props: profile_page::Props,
+    },
+    SettingsPage {
+        props: settings_page::Props,
+    },
 }
 
 #[component]
@@ -35,11 +37,15 @@ fn App(cx: Scope, content: Pages) -> View<SsrNode> {
             cx,
             match &content {
                 // pick the appropriate component to render for each page
+                Pages::SettingsPage { props } => {
+                    format!("{} settings | rssc-intract", props.user.username)
+                }
                 Pages::ProfilePage { props } => format!("{} | rssc-intract", props.user.username),
             },
         ))
         .c(body().c(div().id("content").c(match content {
-            Pages::ProfilePage { props } => ProfilePage(cx, props),
+            Pages::ProfilePage { props } => profile_page::Page(cx, props),
+            Pages::SettingsPage { props } => settings_page::Page(cx, props),
         })))
         .view(cx)
 }
@@ -50,17 +56,4 @@ fn Head(cx: Scope, title: String) -> View<SsrNode> {
         meta (name="viewport", content="width=device-width, initial-scale=1")
         title {(title)}
     }}
-}
-
-#[component]
-fn ProfilePage(cx: Scope, props: ProfilePageProps) -> View<SsrNode> {
-    let heading = format!(
-        "{}'s profile",
-        match props.user.display_name {
-            Some(display_name) => display_name,
-            None => props.user.username,
-        }
-    );
-
-    view! {cx, h1 {(heading)} }
 }
