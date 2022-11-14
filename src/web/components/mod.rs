@@ -6,8 +6,12 @@ use sycamore::{builder::prelude::*, component, render_to_string, view, Prop};
 
 use crate::database::user::User;
 
+/// renders a page to raw html
 pub fn render_page(page: Pages) -> RawHtml<String> {
-    RawHtml(render_to_string(|cx| App(cx, page)))
+    RawHtml(format!(
+        "<!DOCTYPE html>{}",
+        render_to_string(|cx| App(cx, page))
+    ))
 }
 
 #[derive(Prop)]
@@ -15,8 +19,12 @@ pub struct ProfilePageProps {
     pub user: User,
 }
 
+/**
+ * lists avialable pages to render
+ * these usually correspond to a route
+ */
 pub enum Pages {
-    UserPage { props: ProfilePageProps },
+    ProfilePage { props: ProfilePageProps },
 }
 
 #[component]
@@ -26,11 +34,12 @@ fn App(cx: Scope, content: Pages) -> View<SsrNode> {
         .c(Head(
             cx,
             match &content {
-                Pages::UserPage { props } => format!("{} | rssc-intract", props.user.username),
+                // pick the appropriate component to render for each page
+                Pages::ProfilePage { props } => format!("{} | rssc-intract", props.user.username),
             },
         ))
         .c(body().c(div().id("content").c(match content {
-            Pages::UserPage { props } => ProfilePage(cx, props),
+            Pages::ProfilePage { props } => ProfilePage(cx, props),
         })))
         .view(cx)
 }
@@ -38,7 +47,7 @@ fn App(cx: Scope, content: Pages) -> View<SsrNode> {
 #[component]
 fn Head(cx: Scope, title: String) -> View<SsrNode> {
     view! {cx, head {
-        meta (name="viewport")
+        meta (name="viewport", content="width=device-width, initial-scale=1")
         title {(title)}
     }}
 }

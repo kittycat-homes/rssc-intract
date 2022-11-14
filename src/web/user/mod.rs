@@ -42,7 +42,7 @@ pub fn profile(username: String) -> Result<content::RawHtml<String>, Status> {
         }
     };
 
-    Ok(render_page(Pages::UserPage {
+    Ok(render_page(Pages::ProfilePage {
         props: ProfilePageProps { user },
     }))
 }
