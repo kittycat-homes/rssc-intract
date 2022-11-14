@@ -2,7 +2,7 @@ use crate::database::schema::users;
 use crate::database::*;
 
 /// struct that represents the users table
-#[derive(Debug, Insertable, Queryable, Builder)]
+#[derive(Debug, Insertable, Queryable, Builder, Clone)]
 #[diesel(table_name = users)]
 pub struct User {
     pub username: String,
