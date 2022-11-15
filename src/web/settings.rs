@@ -14,8 +14,6 @@ use rocket::{
     response::{content::RawHtml, Redirect},
     Route,
 };
-use rocket_dyn_templates::{context, Template};
-use std::error::Error;
 
 pub fn routes() -> Vec<Route> {
     routes![
@@ -57,24 +55,4 @@ fn change_password_settings(
             Err(Redirect::to("/settings"))
         }
     }
-}
-
-fn show(session: Session, r: Result<(), Box<dyn Error>>) -> Template {
-    let template = render_template(session);
-    match r {
-        Ok(_) => template,
-        Err(e) => {
-            error!("{}", e);
-            template
-        }
-    }
-}
-
-fn render_template(session: Session) -> Template {
-    Template::render(
-        "settings",
-        context! {
-            displayname: session.user.display_name,
-        },
-    )
 }
