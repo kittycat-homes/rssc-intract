@@ -1,7 +1,9 @@
 use rocket::Route;
 mod about;
 mod auth;
+pub mod components;
 pub mod errors;
+pub mod language;
 mod settings;
 mod share;
 mod user;

@@ -3,10 +3,17 @@
 use crate::{
     database as db,
     logic::{self, auth::Session},
+    web::components::{profile_page, Pages},
 };
-use rocket::{form::Form, http::Status, response::Redirect, Route};
-use rocket_dyn_templates::Template;
+use rocket::{
+    form::Form,
+    http::Status,
+    response::{content, Redirect},
+    Route,
+};
 use serde::Serialize;
+
+use super::components::render_page;
 
 pub fn routes() -> Vec<Route> {
     routes![follow]
@@ -19,12 +26,23 @@ struct Id<'r> {
 
 #[derive(Serialize)]
 struct ProfileViewData {
-    userid: String,
+    user_name: String,
+    display_name: Option<String>,
 }
 
 #[get("/user/<username>")]
-pub fn profile(username: String) -> Template {
-    Template::render("profileview", &ProfileViewData { userid: username })
+pub fn profile(username: String) -> Result<content::RawHtml<String>, Status> {
+    let user = match db::user::get(username) {
+        Ok(u) => u,
+        Err(e) => {
+            error!("{}", e);
+            return Err(Status::NotFound);
+        }
+    };
+
+    Ok(render_page(Pages::ProfilePage {
+        props: profile_page::Props { user },
+    }))
 }
 
 /// lets you follow a user with format user@url.example
