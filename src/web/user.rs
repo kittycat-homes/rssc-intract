@@ -32,7 +32,7 @@ struct ProfileViewData {
 
 #[get("/user/<username>")]
 pub fn profile(username: String) -> Result<content::RawHtml<String>, Status> {
-    let user = match db::user::get(username.clone()) {
+    let user = match db::user::get(username) {
         Ok(u) => u,
         Err(e) => {
             error!("{}", e);
