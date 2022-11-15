@@ -38,7 +38,6 @@ impl<'r> FromRequest<'r> for Translation {
         /// used for parsing the accept language header
         fn parse_language(s: &str) -> Translation {
             let user_languages = accept_language::parse(s);
-            info!("{:?}", user_languages);
 
             for lang in user_languages {
                 match lang.as_str() {
