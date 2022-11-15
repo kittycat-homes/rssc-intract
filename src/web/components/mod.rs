@@ -1,20 +1,21 @@
-use super::language::{translation, Language, Translatable};
 use rocket::response::content::RawHtml;
 use sycamore::{builder::prelude::*, prelude::*, render_to_string};
+
+use super::language::Translation;
 
 pub mod login_page;
 pub mod profile_page;
 pub mod settings_page;
 
 /// renders a page to raw html
-pub fn render_page(page: Pages) -> RawHtml<String> {
+pub fn render_page(page: Pages, translation: Translation) -> RawHtml<String> {
     RawHtml(format!(
         "<!DOCTYPE html>{}",
         render_to_string(|cx| App(
             cx,
             AppProps {
                 content: page,
-                language: Language::English
+                translation
             }
         ))
     ))
@@ -40,19 +41,13 @@ pub enum Pages {
 #[derive(Prop)]
 struct AppProps {
     content: Pages,
-    language: Language,
-}
-
-impl Translatable for AppProps {
-    fn language(&self) -> Language {
-        self.language
-    }
+    translation: Translation,
 }
 
 #[component]
 fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
     html()
-        .attr("lang", translation(props.language).code)
+        .attr("lang", props.translation.code)
         .c(Head(
             cx,
             match &props.content {

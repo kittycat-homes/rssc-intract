@@ -3,7 +3,7 @@
 #![allow(clippy::result_large_err)]
 
 use crate::logic;
-use crate::web::{components, errors, language};
+use crate::web::{components, errors, language::Translation};
 use rocket::response::content::RawHtml;
 use rocket::{
     form::Form,
@@ -11,7 +11,7 @@ use rocket::{
     response::{Flash, Redirect},
     Route,
 };
-use rocket_dyn_templates::{context, Template};
+use rocket_dyn_templates::Template;
 
 pub fn routes() -> Vec<Route> {
     routes![post_login, login, login_redirect, logout]
@@ -43,12 +43,13 @@ fn login_redirect(_session: logic::auth::Session) -> Redirect {
  * shows login page if a user is not logged in
  */
 #[get("/login", rank = 2)]
-fn login() -> RawHtml<String> {
-    components::render_page(components::Pages::LoginPage {
-        props: components::login_page::Props {
-            language: language::determine_language(),
+fn login(translation: Translation) -> RawHtml<String> {
+    components::render_page(
+        components::Pages::LoginPage {
+            props: components::login_page::Props { translation },
         },
-    })
+        translation,
+    )
 }
 
 #[get("/logout")]

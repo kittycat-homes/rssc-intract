@@ -11,7 +11,7 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
     let profiletext = format!("@{}", props.user.username);
 
     view! {cx,
-        h1 {(crate::web::language::translation(crate::web::language::Language::English).settings_page_heading)}
+        h1 {"seeettings"}
 
         h2 {(profiletext)}
         form (action="/settings/profile", method="post"){
