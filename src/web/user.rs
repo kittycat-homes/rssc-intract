@@ -3,7 +3,10 @@
 use crate::{
     database as db,
     logic::{self, auth::Session},
-    web::components::{profile_page, Pages},
+    web::{
+        components::{profile_page, Pages},
+        language::Translation,
+    },
 };
 use rocket::{
     form::Form,
@@ -31,7 +34,10 @@ struct ProfileViewData {
 }
 
 #[get("/user/<username>")]
-pub fn profile(username: String) -> Result<content::RawHtml<String>, Status> {
+pub fn profile(
+    username: String,
+    translation: Translation,
+) -> Result<content::RawHtml<String>, Status> {
     let user = match db::user::get(username) {
         Ok(u) => u,
         Err(e) => {
@@ -40,9 +46,12 @@ pub fn profile(username: String) -> Result<content::RawHtml<String>, Status> {
         }
     };
 
-    Ok(render_page(Pages::ProfilePage {
-        props: profile_page::Props { user },
-    }))
+    Ok(render_page(
+        Pages::Profile {
+            props: profile_page::Props { user },
+        },
+        translation,
+    ))
 }
 
 /// lets you follow a user with format user@url.example

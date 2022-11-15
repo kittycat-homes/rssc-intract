@@ -26,3 +26,4 @@ url = {version = "2", features = ["serde"]}
 reqwest = { version = "0.11", features = ["json"] }
 scraper = "0.13"
 sycamore = {version = "0.8", features = ["ssr"]}
+accept-language = "2"

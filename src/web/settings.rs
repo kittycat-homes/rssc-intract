@@ -7,7 +7,7 @@ use crate::{
         auth::Session,
         settings::{PasswordSettings, ProfileSettings},
     },
-    web::components,
+    web::{components, language::Translation},
 };
 use rocket::{
     form::Form,
@@ -25,10 +25,13 @@ pub fn routes() -> Vec<Route> {
 }
 
 #[get("/settings")]
-fn settings(session: Session) -> RawHtml<String> {
-    components::render_page(components::Pages::SettingsPage {
-        props: components::settings_page::Props { user: session.user },
-    })
+fn settings(session: Session, translation: Translation) -> RawHtml<String> {
+    components::render_page(
+        components::Pages::Settings {
+            props: components::settings_page::Props { user: session.user },
+        },
+        translation,
+    )
 }
 
 #[get("/settings", rank = 2)]
