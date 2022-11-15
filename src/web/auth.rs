@@ -3,7 +3,8 @@
 #![allow(clippy::result_large_err)]
 
 use crate::logic;
-use crate::web::errors;
+use crate::web::{components, errors, language};
+use rocket::response::content::RawHtml;
 use rocket::{
     form::Form,
     http::CookieJar,
@@ -42,8 +43,12 @@ fn login_redirect(_session: logic::auth::Session) -> Redirect {
  * shows login page if a user is not logged in
  */
 #[get("/login", rank = 2)]
-fn login() -> Template {
-    Template::render("login", context! {})
+fn login() -> RawHtml<String> {
+    components::render_page(components::Pages::LoginPage {
+        props: components::login_page::Props {
+            language: language::determine_language(),
+        },
+    })
 }
 
 #[get("/logout")]

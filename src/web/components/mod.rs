@@ -1,9 +1,8 @@
+use super::language::{translation, Language, Translatable};
 use rocket::response::content::RawHtml;
-use sycamore::reactive::Scope;
-use sycamore::view::View;
-use sycamore::web::SsrNode;
-use sycamore::{builder::prelude::*, component, render_to_string, view};
+use sycamore::{builder::prelude::*, prelude::*, render_to_string};
 
+pub mod login_page;
 pub mod profile_page;
 pub mod settings_page;
 
@@ -11,7 +10,13 @@ pub mod settings_page;
 pub fn render_page(page: Pages) -> RawHtml<String> {
     RawHtml(format!(
         "<!DOCTYPE html>{}",
-        render_to_string(|cx| App(cx, page))
+        render_to_string(|cx| App(
+            cx,
+            AppProps {
+                content: page,
+                language: Language::English
+            }
+        ))
     ))
 }
 
@@ -27,25 +32,42 @@ pub enum Pages {
     SettingsPage {
         props: settings_page::Props,
     },
+    LoginPage {
+        props: login_page::Props,
+    },
+}
+
+#[derive(Prop)]
+struct AppProps {
+    content: Pages,
+    language: Language,
+}
+
+impl Translatable for AppProps {
+    fn language(&self) -> Language {
+        self.language
+    }
 }
 
 #[component]
-fn App(cx: Scope, content: Pages) -> View<SsrNode> {
+fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
     html()
-        .attr("lang", "en")
+        .attr("lang", translation(props.language).code)
         .c(Head(
             cx,
-            match &content {
+            match &props.content {
                 // pick the appropriate component to render for each page
                 Pages::SettingsPage { props } => {
-                    format!("{} settings | rssc-intract", props.user.username)
+                    format!("settings for @{} | rssc-intract", props.user.username)
                 }
                 Pages::ProfilePage { props } => format!("{} | rssc-intract", props.user.username),
+                Pages::LoginPage { props: _ } => format!("{} rssc-intract", "login"),
             },
         ))
-        .c(body().c(div().id("content").c(match content {
+        .c(body().c(div().id("content").c(match props.content {
             Pages::ProfilePage { props } => profile_page::Page(cx, props),
             Pages::SettingsPage { props } => settings_page::Page(cx, props),
+            Pages::LoginPage { props } => login_page::Page(cx, props),
         })))
         .view(cx)
 }
