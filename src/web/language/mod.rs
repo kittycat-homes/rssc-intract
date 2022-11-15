@@ -43,7 +43,7 @@ impl<'r> FromRequest<'r> for Translation {
                 match lang.as_str() {
                     "de" => return german::TRANSLATION,
                     "en" => return english::TRANSLATION,
-                    _ => break,
+                    _ => (),
                 }
             }
 

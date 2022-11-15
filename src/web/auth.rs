@@ -45,7 +45,7 @@ fn login_redirect(_session: logic::auth::Session) -> Redirect {
 #[get("/login", rank = 2)]
 fn login(translation: Translation) -> RawHtml<String> {
     components::render_page(
-        components::Pages::LoginPage {
+        components::Pages::Login {
             props: components::login_page::Props { translation },
         },
         translation,

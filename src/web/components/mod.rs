@@ -27,13 +27,13 @@ pub fn render_page(page: Pages, translation: Translation) -> RawHtml<String> {
  */
 pub enum Pages {
     /// a users profile, displaying their recent shares etc.
-    ProfilePage {
+    Profile {
         props: profile_page::Props,
     },
-    SettingsPage {
+    Settings {
         props: settings_page::Props,
     },
-    LoginPage {
+    Login {
         props: login_page::Props,
     },
 }
@@ -52,17 +52,17 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
             cx,
             match &props.content {
                 // pick the appropriate component to render for each page
-                Pages::SettingsPage { props } => {
+                Pages::Settings { props } => {
                     format!("settings for @{} | rssc-intract", props.user.username)
                 }
-                Pages::ProfilePage { props } => format!("{} | rssc-intract", props.user.username),
-                Pages::LoginPage { props: _ } => format!("{} rssc-intract", "login"),
+                Pages::Profile { props } => format!("{} | rssc-intract", props.user.username),
+                Pages::Login { props: _ } => format!("{} rssc-intract", "login"),
             },
         ))
         .c(body().c(div().id("content").c(match props.content {
-            Pages::ProfilePage { props } => profile_page::Page(cx, props),
-            Pages::SettingsPage { props } => settings_page::Page(cx, props),
-            Pages::LoginPage { props } => login_page::Page(cx, props),
+            Pages::Profile { props } => profile_page::Page(cx, props),
+            Pages::Settings { props } => settings_page::Page(cx, props),
+            Pages::Login { props } => login_page::Page(cx, props),
         })))
         .view(cx)
 }

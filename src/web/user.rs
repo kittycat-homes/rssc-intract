@@ -47,7 +47,7 @@ pub fn profile(
     };
 
     Ok(render_page(
-        Pages::ProfilePage {
+        Pages::Profile {
             props: profile_page::Props { user },
         },
         translation,

@@ -27,7 +27,7 @@ pub fn routes() -> Vec<Route> {
 #[get("/settings")]
 fn settings(session: Session, translation: Translation) -> RawHtml<String> {
     components::render_page(
-        components::Pages::SettingsPage {
+        components::Pages::Settings {
             props: components::settings_page::Props { user: session.user },
         },
         translation,
