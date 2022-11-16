@@ -14,11 +14,13 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
         h1 {"seeettings"}
 
         h2 {(profiletext)}
-        form (action="/settings/profile", method="post"){
+        form (action="/settings", method="post"){
             label (for="displayname") {"display name"}
             br {}
             input (type="text", id="displayname", name="displayname", value=(display_name)){}
             br {}
+            label {"🌐"}
+            input (type="text", id="language", name="language") {}
             input (type="submit", value="change") {}
         }
 
