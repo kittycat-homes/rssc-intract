@@ -18,10 +18,16 @@ pub struct Translation {
     pub username: &'static str,
     pub password: &'static str,
     pub login: &'static str,
+    pub display_name: &'static str,
+    pub new_password: &'static str,
+    pub save: &'static str,
+    pub language: &'static str,
 
     // headings
     //// settings page
     pub settings_page_heading: &'static str,
+    pub settings_page_profile_heading: &'static str,
+    pub settings_page_client_heading: &'static str,
     pub settings_page_password_heading: &'static str,
     //// login page
     pub login_page_heading: &'static str,

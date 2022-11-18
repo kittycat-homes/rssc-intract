@@ -30,7 +30,10 @@ pub fn routes() -> Vec<Route> {
 fn settings(session: Session, translation: Translation) -> RawHtml<String> {
     components::render_page(
         components::Pages::Settings {
-            props: components::settings_page::Props { user: session.user },
+            props: components::settings_page::Props {
+                user: session.user,
+                translation,
+            },
         },
         translation,
     )
