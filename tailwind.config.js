@@ -1,10 +1,13 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
+const defaultTheme = require("tailwindcss/defaultTheme")
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./web/**/*.{hbs,html,js}"],
-  theme: {
-    extend: {},
-  },
-  plugins: [require("@tailwindcss/forms")],
+        content: ["./src/web/components/**/*.rs"],
+        theme: {
+                fontFamily: {
+                        atkinson: ["Atkinson", "sans-serif"],
+                },
+                extend: {},
+        },
+        plugins: [require("@tailwindcss/forms")],
 }

@@ -59,6 +59,9 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
                 Pages::Login { props: _ } => format!("{} rssc-intract", "login"),
             },
         ))
+        .c(link()
+            .attr("rel", "stylesheet")
+            .attr("href", "/static/css/tailwind.css"))
         .c(body().c(div().id("content").c(match props.content {
             Pages::Profile { props } => profile_page::Page(cx, props),
             Pages::Settings { props } => settings_page::Page(cx, props),
