@@ -6,9 +6,11 @@ pub const TRANSLATION: Translation = Translation {
     password: "password",
     login: "login",
     display_name: "display name",
+    logout: "log out",
     save: "save",
     new_password: "new password",
     language: "language",
+    go_to_login_for_more_settings: "log in for all settings...",
 
     // headings
     settings_page_heading: "settings",

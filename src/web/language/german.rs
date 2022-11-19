@@ -7,8 +7,10 @@ pub const TRANSLATION: Translation = Translation {
     username: "benutzername",
     display_name: "anzeigename",
     save: "speichern",
+    logout: "abmelden",
     new_password: "neues password",
     language: "sprache",
+    go_to_login_for_more_settings: "melde dich an um alle einstellungen verändern zu können...",
 
     settings_page_heading: "einstellungen",
     settings_page_password_heading: "passwort",

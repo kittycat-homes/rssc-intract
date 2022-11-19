@@ -5,7 +5,7 @@
 use crate::{
     logic::{
         auth::Session,
-        settings::{PasswordSettings, Settings},
+        settings::{ClientSettings, PasswordSettings, UserSettings},
     },
     web::{components, language::Translation},
 };
@@ -20,18 +20,18 @@ use rocket::{
 pub fn routes() -> Vec<Route> {
     routes![
         settings,
-        redirect_settings,
         change_settings,
-        change_password_settings
+        change_client_settings,
+        change_password_settings,
     ]
 }
 
 #[get("/settings")]
-fn settings(session: Session, translation: Translation) -> RawHtml<String> {
+fn settings(session: Option<Session>, translation: Translation) -> RawHtml<String> {
     components::render_page(
         components::Pages::Settings {
             props: components::settings_page::Props {
-                user: session.user,
+                user: session.map(|s| s.user),
                 translation,
             },
         },
@@ -39,25 +39,23 @@ fn settings(session: Session, translation: Translation) -> RawHtml<String> {
     )
 }
 
-#[get("/settings", rank = 2)]
-fn redirect_settings() -> Redirect {
-    Redirect::to("/login")
-}
-
-#[post("/settings", data = "<settings>")]
-/// regular settings that are not password protected
-fn change_settings(
-    session: Session,
-    settings: Form<Settings<'_>>,
-    jar: &CookieJar<'_>,
-) -> Redirect {
+/// regular settings that are not password protected, but a user must be logged in for
+#[post("/settings/user", data = "<settings>")]
+fn change_settings(session: Session, settings: Form<UserSettings<'_>>) -> Redirect {
     // TODO: proper error handling, say if something went wrong
-    let _save = settings.save(&session.user.username, jar);
+    let _save = settings.save(&session.user.username);
     Redirect::to("/settings")
 }
 
-#[post("/settings/password", data = "<settings>")]
+/// settings for the frontend, u can change these without being logged in
+#[post("/settings/client", data = "<settings>")]
+fn change_client_settings(settings: Form<ClientSettings>, jar: &CookieJar<'_>) -> Redirect {
+    settings.into_inner().save(jar);
+    Redirect::to("/settings")
+}
+
 /// settings where you have to reauthorize
+#[post("/settings/password", data = "<settings>")]
 fn change_password_settings(
     session: Session,
     settings: Form<PasswordSettings<'_>>,
