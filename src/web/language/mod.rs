@@ -18,10 +18,16 @@ pub struct Translation {
     pub username: &'static str,
     pub password: &'static str,
     pub login: &'static str,
+    pub display_name: &'static str,
+    pub new_password: &'static str,
+    pub save: &'static str,
+    pub language: &'static str,
 
     // headings
     //// settings page
     pub settings_page_heading: &'static str,
+    pub settings_page_profile_heading: &'static str,
+    pub settings_page_client_heading: &'static str,
     pub settings_page_password_heading: &'static str,
     //// login page
     pub login_page_heading: &'static str,
@@ -50,10 +56,19 @@ impl<'r> FromRequest<'r> for Translation {
             english::TRANSLATION
         }
 
+        // see if a language cookie exists
+        // if yes use this as language
+        match req.cookies().get("language") {
+            None => (),
+            Some(cookie) => return Outcome::Success(parse_language(cookie.value())),
+        }
+
+        // if no cookie exists, then use the browser header
         let t: Translation = match req.headers().get_one("accept-language") {
             Some(s) => parse_language(s),
             None => english::TRANSLATION,
         };
+
         Outcome::Success(t)
     }
 }

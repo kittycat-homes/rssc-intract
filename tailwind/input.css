@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+        font-family: "Atkinson";
+        src: url("/static/fonts/AtkinsonHyperlegible-Regular.ttf");
+}
+
+@layer base {
+        html {
+                font-family: Atkinson, system-ui, sans-serif;
+        }
+        h1 {
+                @apply text-2xl;
+        }
+        h2 {
+                @apply text-xl;
+        }
+}

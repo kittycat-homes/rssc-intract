@@ -2,6 +2,7 @@
 
 use crate::database as db;
 use crate::logic::auth;
+use rocket::http::{Cookie, CookieJar};
 use rocket::FromForm;
 use std::error::Error;
 
@@ -18,15 +19,20 @@ enum SettingsError {
  * settings that should not be changed should be None
  */
 #[derive(FromForm)]
-pub struct ProfileSettings<'r> {
+pub struct Settings<'r> {
     displayname: &'r str,
+    language: &'r str,
 }
 
-impl ProfileSettings<'_> {
+impl Settings<'_> {
     /**
      * save new profile settings
      */
-    pub fn save(&self, username: &str) -> Result<(), Box<dyn Error>> {
+    pub fn save(&self, username: &str, jar: &CookieJar<'_>) -> Result<(), Box<dyn Error>> {
+        // save language
+        jar.add(Cookie::new("language", self.language.to_string()));
+
+        // save display name
         let user = db::user::UpdateUserBuilder::default()
             .display_name(Some(self.displayname.to_string()))
             .build()?;
