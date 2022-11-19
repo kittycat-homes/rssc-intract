@@ -26,6 +26,7 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
             br {}
             input (type="submit", value=(login))
         }
+        a (href="/settings"){(format!("{} ⚙",props.translation.settings_page_heading))}
     }
 }
 
