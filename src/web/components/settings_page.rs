@@ -21,7 +21,9 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
         ),
     };
     view! {cx,
-        h1 {(props.translation.settings_page_heading)}
+        h1 {
+                (props.translation.settings_page_heading)
+        }
         LanguageForm(props.translation)
         (possibly_authenticated_settings)
     }
@@ -60,8 +62,10 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
     };
 
     view! {cx,
-    form (action="/settings/user", method="post"){
-            h2 {(props.translation.settings_page_profile_heading)}
+        div {
+        h2 {(props.translation.user)}
+        form (action="/settings/user", method="post"){
+            h3 {(props.translation.settings_page_profile_heading)}
             label (for="displayname") {(props.translation.display_name)}
             br {}
             input (type="text", id="displayname", name="displayname", value=(display_name)){}
@@ -69,8 +73,8 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
             input (type="submit", value=(format!("{} 💾", props.translation.save))) {}
         }
 
-    h2 {(props.translation.password)}
         form (action="/settings/password", method="post"){
+            h3 {(props.translation.settings_page_password_heading)}
             // old password
             label (for="password"){(props.translation.password)}
             br {}
@@ -84,5 +88,6 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
             input (type="submit", value=(format!("{} 💾", props.translation.save))) {}
         }
     a (href="/logout"){(props.translation.logout)}
+    }
     }
 }

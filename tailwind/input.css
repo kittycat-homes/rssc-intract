@@ -7,14 +7,34 @@
         src: url("/static/fonts/AtkinsonHyperlegible-Regular.ttf");
 }
 
+@font-face {
+        font-family: "AtkinsonBold";
+        src: url("/static/fonts/AtkinsonHyperlegible-Bold.ttf");
+}
+
 @layer base {
         html {
-                font-family: Atkinson, system-ui, sans-serif;
+                font-family: Atkinson, AtkinsonBold;
         }
         h1 {
-                @apply text-5xl;
+                font-family: AtkinsonBold;
+                @apply text-6xl;
+                @apply font-bold;
         }
+
+        h1::before {
+                content: "> ";
+        }
+
         h2 {
+                font-family: AtkinsonBold;
                 @apply text-4xl;
+                @apply font-bold;
+        }
+
+        h3 {
+                font-family: AtkinsonBold;
+                @apply text-2xl;
+                @apply font-bold;
         }
 }

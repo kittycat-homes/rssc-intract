@@ -2,6 +2,7 @@ use super::Translation;
 
 pub const TRANSLATION: Translation = Translation {
     code: "en",
+    user: "user",
     username: "user name",
     password: "password",
     login: "login",

@@ -4,6 +4,7 @@ pub const TRANSLATION: Translation = Translation {
     code: "de",
     login: "anmelden",
     password: "passwort",
+    user: "benutzer",
     username: "benutzername",
     display_name: "anzeigename",
     save: "speichern",

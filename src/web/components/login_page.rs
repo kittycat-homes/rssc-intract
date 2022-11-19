@@ -1,4 +1,7 @@
-use crate::web::language::Translation;
+use crate::web::{
+    components::common::language_picker::{LanguagePicker, LanguagePickerProps},
+    language::Translation,
+};
 use sycamore::prelude::*;
 
 #[component]
@@ -26,7 +29,15 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
             br {}
             input (type="submit", value=(login))
         }
-        a (href="/settings"){(format!("{} ⚙",props.translation.settings_page_heading))}
+        div (class="flex flex-row justify-around items-center w-full") {
+            a (href="/settings"){
+                (format!("{} ⚙", props.translation.settings_page_heading))
+            }
+            form (action="/login/language", method="post", class="grid justify-center text-center") {
+                LanguagePicker(LanguagePickerProps { translation: props.translation })
+                input (type="submit", value=(format!("{} 💾", props.translation.save)))
+            }
+        }
     }
 }
 

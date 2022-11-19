@@ -14,7 +14,7 @@ use rocket::{
 use rocket_dyn_templates::Template;
 
 pub fn routes() -> Vec<Route> {
-    routes![post_login, login, login_redirect, logout]
+    routes![post_login, login, login_redirect, logout, login_language]
 }
 
 /**
@@ -37,6 +37,24 @@ fn post_login(
 #[get("/login")]
 fn login_redirect(_session: logic::auth::Session) -> Redirect {
     Redirect::to("/")
+}
+
+#[derive(FromForm)]
+pub struct Language<'r> {
+    language: &'r str,
+}
+
+impl Language<'_> {
+    pub fn save(&self, jar: &CookieJar<'_>) {
+        // save language
+        logic::settings::set_language_cookie(self.language, jar)
+    }
+}
+
+#[post("/login/language", data = "<language>")]
+fn login_language(jar: &CookieJar<'_>, language: Form<Language>) -> Redirect {
+    language.save(jar);
+    Redirect::to("/login")
 }
 
 /**
