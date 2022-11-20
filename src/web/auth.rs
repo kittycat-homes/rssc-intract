@@ -4,7 +4,7 @@
 #![allow(clippy::unnecessary_lazy_evaluations)]
 
 use crate::logic;
-use crate::web::{components, errors, language::Translation};
+use crate::web::{components, language::Translation};
 use rocket::response::content::RawHtml;
 use rocket::{
     form::Form,
@@ -12,7 +12,6 @@ use rocket::{
     response::{Flash, Redirect},
     Route,
 };
-use rocket_dyn_templates::Template;
 
 pub fn routes() -> Vec<Route> {
     routes![post_login, login, login_redirect, logout, login_language]
@@ -72,14 +71,7 @@ fn login(translation: Translation) -> RawHtml<String> {
 }
 
 #[get("/logout")]
-fn logout(session: logic::auth::Session, jar: &CookieJar<'_>) -> Result<Redirect, Template> {
-    match logic::auth::logout(jar, &session) {
-        Ok(_) => Ok(Redirect::to("/login")),
-        Err(e) => {
-            error!("{}", e);
-            Err(errors::render_error(errors::ErrorContext {
-            message: "failed to properly log you out! your session cookie should have been deleted, but try manually clearing cookies just to be safe",
-        }))
-        }
-    }
+fn logout(session: logic::auth::Session, jar: &CookieJar<'_>) -> Redirect {
+    logic::auth::logout(jar, &session);
+    Redirect::to("/")
 }

@@ -5,6 +5,7 @@ use super::language::Translation;
 
 pub mod common;
 pub mod login_page;
+pub mod new_share_page;
 pub mod profile_page;
 pub mod settings_page;
 
@@ -37,6 +38,9 @@ pub enum Pages {
     Login {
         props: login_page::Props,
     },
+    NewShare {
+        props: new_share_page::Props,
+    },
 }
 
 #[derive(Prop)]
@@ -57,7 +61,10 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
                     format!("{} | rssc-intract", props.translation.settings_page_heading,)
                 }
                 Pages::Profile { props } => format!("{} | rssc-intract", props.user.username),
-                Pages::Login { props: _ } => format!("{} | rssc-intract", props.translation.login),
+                Pages::Login { props } => format!("{} | rssc-intract", props.translation.login),
+                Pages::NewShare { props } => {
+                    format!("{} | rssc-intract", props.translation.new_share)
+                }
             },
         ))
         .c(link()
@@ -70,6 +77,7 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
                 Pages::Profile { props } => profile_page::Page(cx, props),
                 Pages::Settings { props } => settings_page::Page(cx, props),
                 Pages::Login { props } => login_page::Page(cx, props),
+                Pages::NewShare { props } => new_share_page::Page(cx, props),
             })))
         .view(cx)
 }

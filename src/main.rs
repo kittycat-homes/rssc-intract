@@ -1,5 +1,4 @@
 use rocket::{figment::Figment, fs::FileServer, Build, Rocket};
-use rocket_dyn_templates::Template;
 use std::error::Error;
 
 extern crate argon2;
@@ -98,5 +97,4 @@ fn get_rocket() -> Rocket<Build> {
         "/static",
         FileServer::from(format!("{}/static", &CONF.frontend.location)),
     )
-    .attach(Template::fairing())
 }

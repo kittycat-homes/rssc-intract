@@ -12,6 +12,9 @@ pub const TRANSLATION: Translation = Translation {
     new_password: "new password",
     language: "language",
     go_to_login_for_more_settings: "log in for all settings...",
+    new_share: "new share",
+    comment: "comment",
+    tags: "tags",
 
     // headings
     settings_page_heading: "settings",
