@@ -19,19 +19,15 @@ enum SettingsError {
  * settings that should not be changed should be None
  */
 #[derive(FromForm)]
-pub struct Settings<'r> {
+pub struct UserSettings<'r> {
     displayname: &'r str,
-    language: &'r str,
 }
 
-impl Settings<'_> {
+impl UserSettings<'_> {
     /**
      * save new profile settings
      */
-    pub fn save(&self, username: &str, jar: &CookieJar<'_>) -> Result<(), Box<dyn Error>> {
-        // save language
-        jar.add(Cookie::new("language", self.language.to_string()));
-
+    pub fn save(&self, username: &str) -> Result<(), Box<dyn Error>> {
         // save display name
         let user = db::user::UpdateUserBuilder::default()
             .display_name(Some(self.displayname.to_string()))
@@ -39,6 +35,22 @@ impl Settings<'_> {
         db::user::update(username.to_string(), user)?;
         Ok(())
     }
+}
+
+#[derive(FromForm)]
+pub struct ClientSettings<'r> {
+    language: &'r str,
+}
+
+impl ClientSettings<'_> {
+    pub fn save(&self, jar: &CookieJar<'_>) {
+        // save language
+        set_language_cookie(self.language, jar)
+    }
+}
+
+pub fn set_language_cookie(value: &str, jar: &CookieJar<'_>) {
+    jar.add(Cookie::new("language", value.to_owned()))
 }
 
 /**

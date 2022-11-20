@@ -15,6 +15,7 @@ pub struct Translation {
     /// english would be en and german would be de
     pub code: &'static str,
 
+    // common things
     pub username: &'static str,
     pub password: &'static str,
     pub login: &'static str,
@@ -22,6 +23,10 @@ pub struct Translation {
     pub new_password: &'static str,
     pub save: &'static str,
     pub language: &'static str,
+    pub logout: &'static str,
+    pub user: &'static str,
+
+    pub go_to_login_for_more_settings: &'static str,
 
     // headings
     //// settings page

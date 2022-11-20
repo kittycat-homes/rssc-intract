@@ -3,6 +3,7 @@ use sycamore::{builder::prelude::*, prelude::*, render_to_string};
 
 use super::language::Translation;
 
+pub mod common;
 pub mod login_page;
 pub mod profile_page;
 pub mod settings_page;
@@ -53,20 +54,23 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
             match &props.content {
                 // pick the appropriate component to render for each page
                 Pages::Settings { props } => {
-                    format!("settings for @{} | rssc-intract", props.user.username)
+                    format!("{} | rssc-intract", props.translation.settings_page_heading,)
                 }
                 Pages::Profile { props } => format!("{} | rssc-intract", props.user.username),
-                Pages::Login { props: _ } => format!("{} rssc-intract", "login"),
+                Pages::Login { props: _ } => format!("{} | rssc-intract", props.translation.login),
             },
         ))
         .c(link()
             .attr("rel", "stylesheet")
             .attr("href", "/static/css/tailwind.css"))
-        .c(body().c(div().id("content").c(match props.content {
-            Pages::Profile { props } => profile_page::Page(cx, props),
-            Pages::Settings { props } => settings_page::Page(cx, props),
-            Pages::Login { props } => login_page::Page(cx, props),
-        })))
+        .c(body().c(div()
+            .id("content")
+            .class("grid h-screen place-items-center")
+            .c(match props.content {
+                Pages::Profile { props } => profile_page::Page(cx, props),
+                Pages::Settings { props } => settings_page::Page(cx, props),
+                Pages::Login { props } => login_page::Page(cx, props),
+            })))
         .view(cx)
 }
 
