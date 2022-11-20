@@ -1,6 +1,7 @@
 // this is fine since we actually expect to return errors fairly often
 // and the options page shouldnt be pinged that much anyway
 #![allow(clippy::result_large_err)]
+#![allow(clippy::unnecessary_lazy_evaluations)]
 
 use crate::logic;
 use crate::web::{components, errors, language::Translation};
