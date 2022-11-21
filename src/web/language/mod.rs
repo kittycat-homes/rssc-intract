@@ -25,6 +25,9 @@ pub struct Translation {
     pub language: &'static str,
     pub logout: &'static str,
     pub user: &'static str,
+    pub new_share: &'static str,
+    pub comment: &'static str,
+    pub tags: &'static str,
 
     pub go_to_login_for_more_settings: &'static str,
 

@@ -1,8 +1,6 @@
 use rocket::Route;
-mod about;
 mod auth;
 pub mod components;
-pub mod errors;
 pub mod language;
 mod settings;
 mod share;
@@ -10,7 +8,7 @@ mod user;
 
 pub fn routes() -> Vec<Route> {
     [
-        routes![user::profile, about::about],
+        routes![user::profile],
         auth::routes(),
         share::routes(),
         settings::routes(),
