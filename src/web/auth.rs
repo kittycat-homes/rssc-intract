@@ -5,11 +5,10 @@
 
 use crate::logic;
 use crate::web::{components, language::Translation};
-use rocket::response::content::RawHtml;
 use rocket::{
     form::Form,
-    http::CookieJar,
-    response::{Flash, Redirect},
+    http::{CookieJar, Status},
+    response::{content::RawHtml, Flash, Redirect},
     Route,
 };
 
@@ -71,7 +70,9 @@ fn login(translation: Translation) -> RawHtml<String> {
 }
 
 #[get("/logout")]
-fn logout(session: logic::auth::Session, jar: &CookieJar<'_>) -> Redirect {
-    logic::auth::logout(jar, &session);
-    Redirect::to("/")
+fn logout(session: logic::auth::Session, jar: &CookieJar<'_>) -> Result<Redirect, Status> {
+    logic::auth::logout(jar, &session).map_or_else(
+        |_| Err(Status::InternalServerError),
+        |_| Ok(Redirect::to("/")),
+    )
 }
