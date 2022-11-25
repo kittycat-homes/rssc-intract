@@ -67,27 +67,29 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
         form (action="/settings/user", method="post"){
             h3 {(props.translation.settings_page_profile_heading)}
             label (for="displayname") {(props.translation.display_name)}
-            br {}
-            input (type="text", id="displayname", name="displayname", value=(display_name)){}
-            br {}
-            input (type="submit", value=(format!("{} 💾", props.translation.save))) {}
-        }
+                br {}
+                input (type="text", id="displayname", name="displayname", value=(display_name)){}
+                br {}
+                input (type="submit", value=(format!("{} 💾", props.translation.save))) {}
+            }
 
-        form (action="/settings/password", method="post"){
-            h3 {(props.translation.settings_page_password_heading)}
-            // old password
-            label (for="password"){(props.translation.password)}
-            br {}
-            input (type="password", id="password", name="password") {}
-            br {}
-            // new password
-            label (for="new_password"){(props.translation.new_password)}
-            br {}
-            input (type="password", id="new_password", name="new_password") {}
-            br {}
-            input (type="submit", value=(format!("{} 💾", props.translation.save))) {}
+            form (action="/settings/password", method="post"){
+                h3 {(props.translation.settings_page_password_heading)}
+                // old password
+                label (for="password"){(props.translation.password)}
+                br {}
+                input (type="password", id="password", name="password") {}
+                br {}
+                // new password
+                label (for="new_password"){(props.translation.new_password)}
+                br {}
+                input (type="password", id="new_password", name="new_password") {}
+                br {}
+                input (type="submit", value=(format!("{} 💾", props.translation.save))) {}
+            }
+        a (href="/my_data"){(props.translation.my_data)}
+        br {}
+        a (href="/logout"){(props.translation.logout)}
         }
-    a (href="/logout"){(props.translation.logout)}
-    }
     }
 }

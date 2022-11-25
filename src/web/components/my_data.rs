@@ -20,27 +20,27 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
             }
             // username
             tr {
-                th {(props.translation.username)}
-                th {(username)}
+                td {(props.translation.username)}
+                td {(username)}
             }
             tr {
-                th {(props.translation.display_name)}
-                th {(displayname)}
+                td {(props.translation.display_name)}
+                td {(displayname)}
             }
             tr {
-                th {(props.translation.language)}
-                th {(props.translation.code)}
-                th {(props.translation.language_description)}
+                td {(props.translation.language)}
+                td {(props.translation.code)}
+                td {(props.translation.language_description)}
             }
             tr {
-                th {(props.translation.password)}
-                th {(props.translation.redacted_for_your_safety)}
-                th {(props.translation.password_description)}
+                td {(props.translation.password)}
+                td {(props.translation.redacted_for_your_safety)}
+                td {(props.translation.password_description)}
             }
             tr {
-                th {(props.translation.session_token)}
-                th {(props.translation.redacted_for_your_safety)}
-                th {(props.translation.session_token_description)}
+                td {(props.translation.session_token)}
+                td {(props.translation.redacted_for_your_safety)}
+                td {(props.translation.session_token_description)}
             }
         }
     }
