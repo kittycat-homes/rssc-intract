@@ -20,7 +20,7 @@ enum SettingsError {
  */
 #[derive(FromForm)]
 pub struct UserSettings<'r> {
-    displayname: &'r str,
+    displayname: Option<&'r str>,
 }
 
 impl UserSettings<'_> {
@@ -30,7 +30,7 @@ impl UserSettings<'_> {
     pub fn save(&self, username: &str) -> Result<(), Box<dyn Error>> {
         // save display name
         let user = db::user::UpdateUserBuilder::default()
-            .display_name(Some(self.displayname.to_string()))
+            .display_name(self.displayname.map(|s| s.to_string()))
             .build()?;
         db::user::update(username.to_string(), user)?;
         Ok(())

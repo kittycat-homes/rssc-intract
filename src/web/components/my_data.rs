@@ -4,8 +4,37 @@ use crate::{database::user::User, web::language::Translation};
 
 #[component]
 pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
-    let username = props.user.username;
-    let displayname = props.user.display_name.unwrap_or("".into());
+    let authorized: View<SsrNode> = match props.user {
+        None => view! {cx, },
+        Some(user) => {
+            let username = user.username;
+            let displayname: View<SsrNode> = match user.display_name {
+                None => view! {cx, },
+                Some(name) => view! {cx,
+                    td {(props.translation.display_name)}
+                    td {(name)}
+                },
+            };
+            view! {cx,
+                tr {(props.translation.username)}
+                tr {
+                    td {(props.translation.username)}
+                    td {(username)}
+                }
+                tr {(displayname)}
+                tr {
+                    td {(props.translation.password)}
+                    td {(props.translation.redacted_for_your_safety)}
+                    td {(props.translation.password_description)}
+                }
+                tr {
+                    td {(props.translation.session_token)}
+                    td {(props.translation.redacted_for_your_safety)}
+                    td {(props.translation.session_token_description)}
+                }
+            }
+        }
+    };
 
     view! {cx,
         div {
@@ -18,30 +47,12 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
                 th {(props.translation.value)}
                 th {(props.translation.description)}
             }
-            // username
-            tr {
-                td {(props.translation.username)}
-                td {(username)}
-            }
-            tr {
-                td {(props.translation.display_name)}
-                td {(displayname)}
-            }
             tr {
                 td {(props.translation.language)}
                 td {(props.translation.code)}
                 td {(props.translation.language_description)}
             }
-            tr {
-                td {(props.translation.password)}
-                td {(props.translation.redacted_for_your_safety)}
-                td {(props.translation.password_description)}
-            }
-            tr {
-                td {(props.translation.session_token)}
-                td {(props.translation.redacted_for_your_safety)}
-                td {(props.translation.session_token_description)}
-            }
+            (authorized)
         }
     }
 }
@@ -49,5 +60,5 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
 #[derive(Prop)]
 pub struct Props {
     pub translation: Translation,
-    pub user: User,
+    pub user: Option<User>,
 }
