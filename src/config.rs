@@ -29,8 +29,22 @@ pub struct ServerConfig {
     pub frontend: FrontendConfig,
     pub web: WebConfig,
     pub log: LogConfig,
+    pub privacy: PrivacyConfig,
     pub security: SecurityConfig,
     pub database: DatabaseConfig,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct PrivacyConfig {
+    pub robots_txt: String,
+}
+
+impl Default for PrivacyConfig {
+    fn default() -> Self {
+        PrivacyConfig {
+            robots_txt: "User-agent: * \nDisallow: /".to_string(),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]

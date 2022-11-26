@@ -3,6 +3,7 @@ mod auth;
 pub mod components;
 pub mod language;
 mod my_data;
+mod robots;
 mod settings;
 mod share;
 mod user;
@@ -15,6 +16,7 @@ pub fn routes() -> Vec<Route> {
         settings::routes(),
         user::routes(),
         my_data::routes(),
+        robots::routes(),
     ]
     .concat()
 }
