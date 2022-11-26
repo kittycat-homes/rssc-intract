@@ -11,17 +11,20 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
             let displayname: View<SsrNode> = match user.display_name {
                 None => view! {cx, },
                 Some(name) => view! {cx,
-                    td {(props.translation.display_name)}
-                    td {(name)}
+                    tr {
+                        td {(props.translation.display_name)}
+                        td {(name)}
+                        td {}
+                    }
                 },
             };
             view! {cx,
-                tr {(props.translation.username)}
                 tr {
                     td {(props.translation.username)}
                     td {(username)}
+                    td {}
                 }
-                tr {(displayname)}
+                (displayname)
                 tr {
                     td {(props.translation.password)}
                     td {(props.translation.redacted_for_your_safety)}
@@ -37,22 +40,26 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
     };
 
     view! {cx,
-        div {
+        div (class="p-4 lg:p-8") {
             h1 {(props.translation.my_data)}
             p {(props.translation.my_data_description)}
-        }
-        table {
-            tr {
-                th {(props.translation.data)}
-                th {(props.translation.value)}
-                th {(props.translation.description)}
+            table (class="table-auto") {
+                thead {
+                    tr {
+                        th {(props.translation.data)}
+                        th {(props.translation.value)}
+                        th {(props.translation.description)}
+                    }
+                }
+                tbody {
+                    tr {
+                        td {(props.translation.language)}
+                        td {(props.translation.code)}
+                        td {(props.translation.language_description)}
+                    }
+                    (authorized)
+                }
             }
-            tr {
-                td {(props.translation.language)}
-                td {(props.translation.code)}
-                td {(props.translation.language_description)}
-            }
-            (authorized)
         }
     }
 }

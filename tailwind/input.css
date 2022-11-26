@@ -37,4 +37,12 @@
                 @apply text-2xl;
                 @apply font-bold;
         }
+
+        thead {
+                @apply text-left;
+        }
+
+        tbody > tr:nth-child(odd) {
+                @apply bg-pink-50;
+        }
 }

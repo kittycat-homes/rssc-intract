@@ -9,6 +9,7 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
     let possibly_authenticated_settings = match props.user {
         None => view! {cx,
             a (href="/login"){(props.translation.go_to_login_for_more_settings)}
+            br {}
         },
         // there is an authenticated user,
         // this means we can show all settings
@@ -21,11 +22,12 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
         ),
     };
     view! {cx,
-        h1 {
-                (props.translation.settings_page_heading)
+        div {
+            h1 { (props.translation.settings_page_heading) }
+            LanguageForm(props.translation)
+            (possibly_authenticated_settings)
+            a (href="/my_data") {(props.translation.my_data)}
         }
-        LanguageForm(props.translation)
-        (possibly_authenticated_settings)
     }
 }
 
@@ -92,8 +94,6 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
                        value=(format!("{} 💾", props.translation.save))) {
                 }
             }
-        a (href="/my_data"){(props.translation.my_data)}
-        br {}
         a (href="/logout"){(props.translation.logout)}
         }
     }
