@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 rocket = {version = "0.5.0-rc.2", features = ["secrets", "json"]}
+rocket-include-static-resources = "0.10"
 serde = { version = "1", features = ["derive"] }
 clap = { version = "4", features = ["derive"] }
 confy="0.5"

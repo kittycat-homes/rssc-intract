@@ -4,6 +4,7 @@ use rocket::{
     shield::{Referrer, Shield},
     Build, Rocket,
 };
+use rocket_include_static_resources::static_resources_initializer;
 use std::error::Error;
 
 extern crate argon2;
@@ -98,9 +99,7 @@ fn get_rocket() -> Rocket<Build> {
     // serve api
     .mount("/api", api::routes())
     .mount("/", web::routes())
-    .mount(
-        "/static",
-        FileServer::from(format!("{}/static", &CONF.frontend.location)),
-    )
     .attach(Shield::default().enable(Referrer::NoReferrer))
+    .attach(web::assets::fairing())
+    .mount("/static", web::assets::routes())
 }

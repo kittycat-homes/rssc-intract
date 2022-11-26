@@ -4,12 +4,12 @@
 
 @font-face {
         font-family: "Atkinson";
-        src: url("/static/fonts/AtkinsonHyperlegible-Regular.woff2");
+        src: url("/static/fonts/atkinson_regular.woff2");
 }
 
 @font-face {
         font-family: "AtkinsonBold";
-        src: url("/static/fonts/AtkinsonHyperlegible-Bold.woff2");
+        src: url("/static/fonts/atkinson_bold.woff2");
 }
 
 @layer base {

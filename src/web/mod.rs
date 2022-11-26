@@ -1,4 +1,5 @@
 use rocket::Route;
+pub mod assets;
 mod auth;
 pub mod components;
 pub mod language;
