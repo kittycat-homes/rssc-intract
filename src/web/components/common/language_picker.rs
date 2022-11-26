@@ -8,9 +8,10 @@ pub fn LanguagePicker(cx: Scope, props: LanguagePickerProps) -> View<SsrNode> {
         br {}
         select (type="text", id="language", name="language") {
             // it's probably smart to order these alphabetically when adding more
-            LanguageSelectionItem(LanguageSelectionItemProps {
+            /* LanguageSelectionItem(LanguageSelectionItemProps {
                 translation: props.translation, code: "de", name: "deutsch 🇩🇪"
             })
+            */
             LanguageSelectionItem(LanguageSelectionItemProps {
                 translation: props.translation, code: "en", name: "english 🇺🇸"
             })

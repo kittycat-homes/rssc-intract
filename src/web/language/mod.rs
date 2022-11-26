@@ -1,3 +1,4 @@
+#![allow(clippy::single_match)]
 use accept_language;
 use rocket::{
     outcome::Outcome,
@@ -7,7 +8,7 @@ use rocket::{
 use std::convert::Infallible;
 
 mod english;
-mod german;
+// mod german;
 
 #[derive(Clone, Copy)]
 pub struct Translation {
@@ -28,6 +29,11 @@ pub struct Translation {
     pub new_share: &'static str,
     pub comment: &'static str,
     pub tags: &'static str,
+    pub my_data: &'static str,
+    pub my_data_description: &'static str,
+    pub value: &'static str,
+    pub delete_my_account: &'static str,
+    pub irreversible_changes_warning: &'static str,
 
     pub go_to_login_for_more_settings: &'static str,
 
@@ -39,6 +45,13 @@ pub struct Translation {
     pub settings_page_password_heading: &'static str,
     //// login page
     pub login_page_heading: &'static str,
+    pub data: &'static str,
+    pub description: &'static str,
+    pub language_description: &'static str,
+    pub redacted_for_your_safety: &'static str,
+    pub password_description: &'static str,
+    pub session_token: &'static str,
+    pub session_token_description: &'static str,
 }
 
 #[rocket::async_trait]
@@ -55,7 +68,7 @@ impl<'r> FromRequest<'r> for Translation {
 
             for lang in user_languages {
                 match lang.as_str() {
-                    "de" => return german::TRANSLATION,
+                    // "de" => return german::TRANSLATION,
                     "en" => return english::TRANSLATION,
                     _ => (),
                 }

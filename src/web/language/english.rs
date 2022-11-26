@@ -3,7 +3,7 @@ use super::Translation;
 pub const TRANSLATION: Translation = Translation {
     code: "en",
     user: "user",
-    username: "user name",
+    username: "username",
     password: "password",
     login: "login",
     display_name: "display name",
@@ -15,7 +15,19 @@ pub const TRANSLATION: Translation = Translation {
     new_share: "new share",
     comment: "comment",
     tags: "tags",
+    my_data: "my data",
+    my_data_description: "this is a list of all data about you the server is aware of",
+    description: "description",
+    data: "data",
+    value: "value",
+    redacted_for_your_safety: "redacted for your safety",
+    language_description: "we get your language from the headers your browser sends. if you override it manually, it gets saved in a cookie.",
+    password_description: "your password, hashed and salted using argon2, is stored in the database",
+    session_token: "session token",
+    session_token_description: "a randomly generated session token. this is stored in a cookie that gets compared against a list of valid tokens stored in the database. when your browser makes a request that needs authentification it can verify who you are",
 
+    delete_my_account: "delete my account",
+    irreversible_changes_warning: "this will potentially cause irreversible changes. are you sure?",
     // headings
     settings_page_heading: "settings",
     settings_page_password_heading: "password",

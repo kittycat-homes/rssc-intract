@@ -9,6 +9,7 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
     let possibly_authenticated_settings = match props.user {
         None => view! {cx,
             a (href="/login"){(props.translation.go_to_login_for_more_settings)}
+            br {}
         },
         // there is an authenticated user,
         // this means we can show all settings
@@ -21,11 +22,12 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
         ),
     };
     view! {cx,
-        h1 {
-                (props.translation.settings_page_heading)
+        div {
+            h1 { (props.translation.settings_page_heading) }
+            LanguageForm(props.translation)
+            (possibly_authenticated_settings)
+            a (href="/my_data") {(props.translation.my_data)}
         }
-        LanguageForm(props.translation)
-        (possibly_authenticated_settings)
     }
 }
 
@@ -67,27 +69,32 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
         form (action="/settings/user", method="post"){
             h3 {(props.translation.settings_page_profile_heading)}
             label (for="displayname") {(props.translation.display_name)}
-            br {}
-            input (type="text", id="displayname", name="displayname", value=(display_name)){}
-            br {}
-            input (type="submit", value=(format!("{} 💾", props.translation.save))) {}
-        }
+                br {}
+                input (type="text", id="displayname", name="displayname", value=(display_name)){}
+                br {}
+                input (type="submit", value=(format!("{} 💾", props.translation.save))) {}
+            }
 
-        form (action="/settings/password", method="post"){
-            h3 {(props.translation.settings_page_password_heading)}
-            // old password
-            label (for="password"){(props.translation.password)}
-            br {}
-            input (type="password", id="password", name="password") {}
-            br {}
-            // new password
-            label (for="new_password"){(props.translation.new_password)}
-            br {}
-            input (type="password", id="new_password", name="new_password") {}
-            br {}
-            input (type="submit", value=(format!("{} 💾", props.translation.save))) {}
+            form (action="/settings/password", method="post"){
+                h3 {(props.translation.settings_page_password_heading)}
+                // new password
+                label (for="new_password"){(props.translation.new_password)}
+                br {}
+                input (type="password", id="new_password", name="new_password") {}
+                br {}
+                input (type="checkbox", id="delete", name="delete") {}
+                label (for="delete") {(props.translation.delete_my_account)}
+                br {}
+                // old password
+                label (for="password"){(props.translation.password)}
+                br {}
+                input (type="password", id="password", name="password") {}
+                input (type="submit",
+                       onclick=format!("return confirm('{}')", props.translation.irreversible_changes_warning),
+                       value=(format!("{} 💾", props.translation.save))) {
+                }
+            }
+        a (href="/logout"){(props.translation.logout)}
         }
-    a (href="/logout"){(props.translation.logout)}
-    }
     }
 }

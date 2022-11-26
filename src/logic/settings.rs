@@ -20,7 +20,7 @@ enum SettingsError {
  */
 #[derive(FromForm)]
 pub struct UserSettings<'r> {
-    displayname: &'r str,
+    displayname: Option<&'r str>,
 }
 
 impl UserSettings<'_> {
@@ -30,7 +30,7 @@ impl UserSettings<'_> {
     pub fn save(&self, username: &str) -> Result<(), Box<dyn Error>> {
         // save display name
         let user = db::user::UpdateUserBuilder::default()
-            .display_name(Some(self.displayname.to_string()))
+            .display_name(self.displayname.map(|s| s.to_string()))
             .build()?;
         db::user::update(username.to_string(), user)?;
         Ok(())
@@ -60,17 +60,25 @@ pub fn set_language_cookie(value: &str, jar: &CookieJar<'_>) {
 pub struct PasswordSettings<'r> {
     password: &'r str,
     new_password: &'r str,
+    delete: bool,
 }
 
 impl PasswordSettings<'_> {
     pub fn change_password(&self, username: &str) -> Result<(), Box<dyn Error>> {
-        // dont allow empty passwords
-        if self.new_password.is_empty() {
-            return Err(SettingsError::NoPassword)?;
-        }
         // errors if the login is not valid
         if !auth::is_valid_login(username, self.password)? {
             return Err(SettingsError::LoginInvalid)?;
+        }
+
+        // delete account
+        if self.delete {
+            db::user::delete(username.into())?;
+            return Ok(());
+        }
+
+        // dont allow empty passwords
+        if self.new_password.is_empty() {
+            return Err(SettingsError::NoPassword)?;
         }
 
         auth::change_password(username.to_string(), self.new_password.to_string())?;
