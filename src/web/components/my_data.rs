@@ -44,7 +44,7 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
             h1 {(props.translation.my_data)}
             p {(props.translation.my_data_description)}
             table (class="table-auto") {
-                thead {
+                thead (class="font-bold") {
                     tr {
                         th {(props.translation.data)}
                         th {(props.translation.value)}
