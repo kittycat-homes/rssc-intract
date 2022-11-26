@@ -1,3 +1,4 @@
+#![allow(clippy::single_match)]
 use accept_language;
 use rocket::{
     outcome::Outcome,
