@@ -87,10 +87,7 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
                 label (for="password"){(props.translation.password)}
                 br {}
                 input (type="password", id="password", name="password") {}
-                input (type="submit",
-                       onclick=format!("return confirm('{}')", props.translation.irreversible_changes_warning),
-                       value=(format!("{} 💾", props.translation.save))) {
-                }
+                input (type="submit", onclick=format!("return confirm('{}')", props.translation.irreversible_changes_warning), value=(format!("{} 💾", props.translation.save))) {}
             }
         a (href="/my_data"){(props.translation.my_data)}
         br {}

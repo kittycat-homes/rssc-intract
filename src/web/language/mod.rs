@@ -31,6 +31,8 @@ pub struct Translation {
     pub my_data: &'static str,
     pub my_data_description: &'static str,
     pub value: &'static str,
+    pub delete_my_account: &'static str,
+    pub irreversible_changes_warning: &'static str,
 
     pub go_to_login_for_more_settings: &'static str,
 

@@ -26,6 +26,8 @@ pub const TRANSLATION: Translation = Translation {
     session_token: "session token",
     session_token_description: "a randomly generated session token. this is stored in a cookie that gets compared against a list of valid tokens stored in the database. when your browser makes a request that needs authentification it can verify who you are",
 
+    delete_my_account: "delete my account",
+    irreversible_changes_warning: "this will potentially cause irreversible changes. are you sure?",
     // headings
     settings_page_heading: "settings",
     settings_page_password_heading: "password",
