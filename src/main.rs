@@ -1,4 +1,9 @@
-use rocket::{figment::Figment, fs::FileServer, Build, Rocket};
+use rocket::{
+    figment::Figment,
+    fs::FileServer,
+    shield::{Referrer, Shield},
+    Build, Rocket,
+};
 use std::error::Error;
 
 extern crate argon2;
@@ -97,4 +102,5 @@ fn get_rocket() -> Rocket<Build> {
         "/static",
         FileServer::from(format!("{}/static", &CONF.frontend.location)),
     )
+    .attach(Shield::default().enable(Referrer::NoReferrer))
 }
