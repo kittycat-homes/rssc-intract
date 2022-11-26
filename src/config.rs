@@ -26,7 +26,6 @@ pub struct Cli {
 
 #[derive(Default, Serialize, Deserialize, Debug)]
 pub struct ServerConfig {
-    pub frontend: FrontendConfig,
     pub web: WebConfig,
     pub log: LogConfig,
     pub privacy: PrivacyConfig,
@@ -57,18 +56,6 @@ impl Default for WebConfig {
         WebConfig {
             port: 4000,
             address: String::from("127.0.0.1"),
-        }
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct FrontendConfig {
-    pub location: String,
-}
-impl Default for FrontendConfig {
-    fn default() -> Self {
-        FrontendConfig {
-            location: String::from("web"),
         }
     }
 }

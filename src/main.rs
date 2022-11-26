@@ -1,10 +1,8 @@
 use rocket::{
     figment::Figment,
-    fs::FileServer,
     shield::{Referrer, Shield},
     Build, Rocket,
 };
-use rocket_include_static_resources::static_resources_initializer;
 use std::error::Error;
 
 extern crate argon2;
@@ -93,8 +91,7 @@ fn get_rocket() -> Rocket<Build> {
             // settings for rocket
             .merge(("port", &CONF.web.port))
             .merge(("address", &CONF.web.address))
-            .merge(("secret_key", &CONF.security.secret_key))
-            .merge(("template_dir", &CONF.frontend.location)),
+            .merge(("secret_key", &CONF.security.secret_key)),
     )
     // serve api
     .mount("/api", api::routes())
