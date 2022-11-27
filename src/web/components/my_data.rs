@@ -43,7 +43,7 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
     };
 
     view! {cx,
-        div (class="p-4 lg:p-8") {
+        div (class=format!("p-4 md:p-8 m-4 md:m-8 border-l-4 {}", accent_color)) {
             h1 (class=accent_color) {(props.translation.my_data)}
             p {(props.translation.my_data_description)}
             table (class="table-auto") {

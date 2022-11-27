@@ -8,7 +8,7 @@ use super::common::accent_color::random_color;
 
 #[component]
 pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
-    let accent_color = random_color(1)[0];
+    let accent_color = random_color(2)[0];
     let possibly_authenticated_settings = match props.user {
         None => view! {cx,
             a (href="/login", class=format!("link_button {}", accent_color)){
@@ -28,7 +28,7 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
         ),
     };
     view! {cx,
-        div {
+        div (class=format!("p-4 md:p-8 m-4 md:m-8 border-l-4 {}", accent_color)) {
             h1 (class=accent_color) { (props.translation.settings_page_heading) }
             LanguageForm(LanguageFormProps {
                 translation: props.translation,
@@ -65,7 +65,10 @@ fn LanguageForm(cx: Scope, props: LanguageFormProps) -> View<SsrNode> {
     view! {cx,
         form (action="/settings/client", method="post") {
             h2 {(props.translation.settings_page_client_heading)}
-            LanguagePicker(LanguagePickerProps { translation: props.translation })
+            LanguagePicker(LanguagePickerProps {
+                translation: props.translation,
+                accent_color: props.accent_color,
+            })
             br {}
             input (type="submit",
                    class=format!("link_button {}", props.accent_color),
@@ -88,7 +91,13 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
             h3 {(props.translation.settings_page_profile_heading)}
             label (for="displayname") {(props.translation.display_name)}
                 br {}
-                input (type="text", id="displayname", name="displayname", value=(display_name)){}
+                input (
+                    type="text",
+                    id="displayname",
+                    name="displayname",
+                    value=(display_name),
+                    class=format!("rounded_input {}", props.accent_color)
+                    ){}
                 br {}
                 input (type="submit", class=format!("link_button {}", props.accent_color), value=(format!("{} 💾", props.translation.save))) {}
             }
@@ -98,15 +107,30 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
                 // new password
                 label (for="new_password"){(props.translation.new_password)}
                 br {}
-                input (type="password", id="new_password", name="new_password") {}
+                input (
+                    type="password",
+                    id="new_password",
+                    name="new_password",
+                    class=format!("rounded_input {}", props.accent_color)
+                    ) {}
                 br {}
-                input (type="checkbox", id="delete", name="delete") {}
+                input (
+                    type="checkbox",
+                    id="delete",
+                    name="delete",
+                    class=format!("rounded cursor-pointer rounded_input {}", props.accent_color)
+                    ) {}
                 label (for="delete") {(props.translation.delete_my_account)}
                 br {}
                 // old password
                 label (for="password"){(props.translation.password)}
                 br {}
-                input (type="password", id="password", name="password") {}
+                input (
+                    type="password",
+                    id="password",
+                    name="password",
+                    class=format!("rounded_input {}", props.accent_color)
+                    ) {}
                 input (type="submit",
                        class=format!("link_button {}", props.accent_color),
                        onclick=format!("return confirm('{}')", props.translation.irreversible_changes_warning),
