@@ -2,8 +2,11 @@ use sycamore::prelude::*;
 
 use crate::{database::user::User, web::language::Translation};
 
+use super::common::accent_color::random_color;
+
 #[component]
 pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
+    let accent_color = random_color(1)[0];
     let authorized: View<SsrNode> = match props.user {
         None => view! {cx, },
         Some(user) => {
@@ -41,7 +44,7 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
 
     view! {cx,
         div (class="p-4 lg:p-8") {
-            h1 {(props.translation.my_data)}
+            h1 (class=accent_color) {(props.translation.my_data)}
             p {(props.translation.my_data_description)}
             table (class="table-auto") {
                 thead (class="font-bold") {

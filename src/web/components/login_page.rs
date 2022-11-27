@@ -4,8 +4,12 @@ use crate::web::{
 };
 use sycamore::prelude::*;
 
+use super::common::accent_color::random_color;
+
 #[component]
 pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
+    let accent_color = random_color(1)[0];
+
     let translation = props.translation;
     let heading = translation.login_page_heading;
     let username = translation.username;
@@ -27,15 +31,16 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
             br {}
             input (type="password", id="password", name="password") {}
             br {}
-            input (type="submit", class="link_button", value=(login))
+            input (type="submit",
+                   class=format!("link_button {}", accent_color),
+                   value=(login))
         }
         div (class="flex flex-row justify-around items-center w-full") {
-            a (href="/settings", class="link_button"){
-                (format!("{} ⚙", props.translation.settings_page_heading))
-            }
             form (action="/login/language", method="post", class="grid justify-center text-center") {
                 LanguagePicker(LanguagePickerProps { translation: props.translation })
-                input (type="submit", class="link_button", value=(format!("{} 💾", props.translation.save)))
+                input (type="submit",
+                       class=format!("link_button {}", accent_color),
+                       value=(format!("{} 💾", props.translation.save)))
             }
         }
     }

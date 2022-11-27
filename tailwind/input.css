@@ -27,7 +27,7 @@
         }
 
         .link_button {
-                @apply active:font-bold underline cursor-pointer hover:text-slate-600 decoration-4;
+                @apply active:font-bold underline cursor-pointer hover:text-slate-600 dark:hover:text-slate-300 decoration-4;
         }
 
         h2 {
@@ -45,7 +45,7 @@
         }
 
         tbody > tr:nth-child(odd) {
-                @apply bg-pink-50;
+                @apply bg-slate-100 dark:bg-slate-800;
         }
 
         th,

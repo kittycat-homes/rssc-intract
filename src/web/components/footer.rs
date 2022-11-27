@@ -18,7 +18,7 @@ pub fn Footer(cx: Scope, props: Props) -> View<SsrNode> {
     };
 
     view! {cx,
-        footer (class="sticky bottom-0 bg-slate-100") {
+        footer (class="sticky bottom-0 bg-slate-100 dark:bg-slate-800") {
             nav (class="flex justify-evenly") {
                 a (href="/settings", class=format!("link_button {}", accent_color)) {
                     (props.translation.settings_page_heading)}
