@@ -94,6 +94,8 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
 fn Head(cx: Scope, title: String) -> View<SsrNode> {
     view! {cx, head {
         meta (name="viewport", content="width=device-width, initial-scale=1")
+        link (rel="preload", href="/static/fonts/atkinson_regular.woff2", as="font", type="font/woff2", crossorigin=true){}
+        link (rel="preload", href="/static/fonts/atkinson_bold.woff2", as="font", type="font/woff2", crossorigin=true){}
         title {(title)}
     }}
 }
