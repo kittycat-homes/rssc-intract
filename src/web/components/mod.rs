@@ -4,6 +4,7 @@ use sycamore::{builder::prelude::*, prelude::*, render_to_string};
 use super::language::Translation;
 
 pub mod common;
+mod footer;
 pub mod login_page;
 pub mod my_data;
 pub mod new_share_page;
@@ -87,6 +88,12 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
                 Pages::Login { props } => login_page::Page(cx, props),
                 Pages::NewShare { props } => new_share_page::Page(cx, props),
             })))
+        .c(footer::Footer(
+            cx,
+            footer::Props {
+                translation: props.translation,
+            },
+        ))
         .view(cx)
 }
 

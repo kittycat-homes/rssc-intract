@@ -4,11 +4,13 @@ use crate::{
 };
 use sycamore::prelude::*;
 
+use super::common::accent_color::random_color;
+
 #[component]
 pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
     let possibly_authenticated_settings = match props.user {
         None => view! {cx,
-            a (href="/login"){(props.translation.go_to_login_for_more_settings)}
+            a (href="/login", class="link_button"){(props.translation.go_to_login_for_more_settings)}
             br {}
         },
         // there is an authenticated user,
@@ -26,7 +28,7 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
             h1 { (props.translation.settings_page_heading) }
             LanguageForm(props.translation)
             (possibly_authenticated_settings)
-            a (href="/my_data") {(props.translation.my_data)}
+            a (href="/my_data", class="link_button") {(props.translation.my_data)}
         }
     }
 }
@@ -51,7 +53,7 @@ fn LanguageForm(cx: Scope, translation: Translation) -> View<SsrNode> {
             h2 {(translation.settings_page_client_heading)}
             LanguagePicker(LanguagePickerProps { translation })
             br {}
-            input (type="submit", value=(format!("{} 💾", translation.save))) {}
+            input (type="submit", class="link_button", value=(format!("{} 💾", translation.save))) {}
         }
     }
 }
@@ -72,7 +74,7 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
                 br {}
                 input (type="text", id="displayname", name="displayname", value=(display_name)){}
                 br {}
-                input (type="submit", value=(format!("{} 💾", props.translation.save))) {}
+                input (type="submit", class=format!("link_button {}", random_color(1)[0]), value=(format!("{} 💾", props.translation.save))) {}
             }
 
             form (action="/settings/password", method="post"){
@@ -90,11 +92,12 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
                 br {}
                 input (type="password", id="password", name="password") {}
                 input (type="submit",
+                       class="link_button",
                        onclick=format!("return confirm('{}')", props.translation.irreversible_changes_warning),
                        value=(format!("{} 💾", props.translation.save))) {
                 }
             }
-        a (href="/logout"){(props.translation.logout)}
+        a (href="/logout", class="link_button"){(props.translation.logout)}
         }
     }
 }

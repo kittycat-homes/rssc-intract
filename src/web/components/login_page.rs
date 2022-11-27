@@ -27,15 +27,15 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
             br {}
             input (type="password", id="password", name="password") {}
             br {}
-            input (type="submit", value=(login))
+            input (type="submit", class="link_button", value=(login))
         }
         div (class="flex flex-row justify-around items-center w-full") {
-            a (href="/settings"){
+            a (href="/settings", class="link_button"){
                 (format!("{} ⚙", props.translation.settings_page_heading))
             }
             form (action="/login/language", method="post", class="grid justify-center text-center") {
                 LanguagePicker(LanguagePickerProps { translation: props.translation })
-                input (type="submit", value=(format!("{} 💾", props.translation.save)))
+                input (type="submit", class="link_button", value=(format!("{} 💾", props.translation.save)))
             }
         }
     }
