@@ -1,6 +1,5 @@
 use rocket::{
     figment::Figment,
-    fs::FileServer,
     shield::{Referrer, Shield},
     Build, Rocket,
 };
@@ -92,15 +91,12 @@ fn get_rocket() -> Rocket<Build> {
             // settings for rocket
             .merge(("port", &CONF.web.port))
             .merge(("address", &CONF.web.address))
-            .merge(("secret_key", &CONF.security.secret_key))
-            .merge(("template_dir", &CONF.frontend.location)),
+            .merge(("secret_key", &CONF.security.secret_key)),
     )
     // serve api
     .mount("/api", api::routes())
     .mount("/", web::routes())
-    .mount(
-        "/static",
-        FileServer::from(format!("{}/static", &CONF.frontend.location)),
-    )
     .attach(Shield::default().enable(Referrer::NoReferrer))
+    .attach(web::assets::fairing())
+    .mount("/static", web::assets::routes())
 }
