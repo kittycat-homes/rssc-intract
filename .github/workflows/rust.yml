@@ -25,6 +25,17 @@ jobs:
           toolchain: ${{ matrix.rust }}
           override: true
           components: rustfmt, clippy
+      - name: Load cached npm packages
+        id: cached-npm-dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+      - name: npm install dependencies
+        run: npm install
+      - name: Tailwind compile
+        run: npm run build
       - name: Set up cargo cache
         uses: actions/cache@v3
         continue-on-error: false
