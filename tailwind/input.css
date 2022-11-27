@@ -19,7 +19,7 @@
         }
         h1 {
                 font-family: AtkinsonBold;
-                @apply text-6xl font-bold;
+                @apply text-6xl font-bold before:content-[">"];
         }
 
         .font-bold {
@@ -28,10 +28,6 @@
 
         .link_button {
                 @apply active:font-bold underline cursor-pointer hover:text-slate-600 decoration-4;
-        }
-
-        h1::before {
-                content: "> ";
         }
 
         h2 {
