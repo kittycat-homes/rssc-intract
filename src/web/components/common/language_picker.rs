@@ -6,14 +6,19 @@ pub fn LanguagePicker(cx: Scope, props: LanguagePickerProps) -> View<SsrNode> {
     view! {cx,
         label (for="language") {(format!("{} 🌐", props.translation.language))}
         br {}
-        select (type="text", id="language", name="language") {
+        select (
+            type="text",
+            id="language",
+            name="language",
+            class=format!("cursor-pointer pr-8 rounded_input {}", props.accent_color),
+            ) {
             // it's probably smart to order these alphabetically when adding more
             /* LanguageSelectionItem(LanguageSelectionItemProps {
                 translation: props.translation, code: "de", name: "deutsch 🇩🇪"
             })
             */
             LanguageSelectionItem(LanguageSelectionItemProps {
-                translation: props.translation, code: "en", name: "english 🇺🇸"
+                translation: props.translation, code: "en", name: "english"
             })
         }
     }
@@ -22,6 +27,7 @@ pub fn LanguagePicker(cx: Scope, props: LanguagePickerProps) -> View<SsrNode> {
 #[derive(Prop)]
 pub struct LanguagePickerProps {
     pub translation: Translation,
+    pub accent_color: &'static str,
 }
 
 #[component]

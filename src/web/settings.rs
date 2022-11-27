@@ -28,6 +28,7 @@ pub fn routes() -> Vec<Route> {
 
 #[get("/settings")]
 fn settings(session: Option<Session>, translation: Translation) -> RawHtml<String> {
+    let authenticated: bool = session.is_some();
     components::render_page(
         components::Pages::Settings {
             props: components::settings_page::Props {
@@ -36,6 +37,7 @@ fn settings(session: Option<Session>, translation: Translation) -> RawHtml<Strin
             },
         },
         translation,
+        authenticated,
     )
 }
 

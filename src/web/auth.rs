@@ -66,6 +66,7 @@ fn login(translation: Translation) -> RawHtml<String> {
             props: components::login_page::Props { translation },
         },
         translation,
+        false,
     )
 }
 

@@ -11,6 +11,7 @@ pub fn routes() -> Vec<Route> {
 
 #[get("/my_data")]
 fn my_data(session: Option<Session>, translation: Translation) -> RawHtml<String> {
+    let authenticated = session.is_some();
     components::render_page(
         components::Pages::MyData {
             props: components::my_data::Props {
@@ -19,5 +20,6 @@ fn my_data(session: Option<Session>, translation: Translation) -> RawHtml<String
             },
         },
         translation,
+        authenticated,
     )
 }

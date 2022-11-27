@@ -4,6 +4,7 @@ use sycamore::{builder::prelude::*, prelude::*, render_to_string};
 use super::language::Translation;
 
 pub mod common;
+mod footer;
 pub mod login_page;
 pub mod my_data;
 pub mod new_share_page;
@@ -11,14 +12,15 @@ pub mod profile_page;
 pub mod settings_page;
 
 /// renders a page to raw html
-pub fn render_page(page: Pages, translation: Translation) -> RawHtml<String> {
+pub fn render_page(page: Pages, translation: Translation, authenticated: bool) -> RawHtml<String> {
     RawHtml(format!(
         "<!DOCTYPE html>{}",
         render_to_string(|cx| App(
             cx,
             AppProps {
                 content: page,
-                translation
+                translation,
+                authenticated,
             }
         ))
     ))
@@ -51,6 +53,7 @@ pub enum Pages {
 struct AppProps {
     content: Pages,
     translation: Translation,
+    authenticated: bool,
 }
 
 #[component]
@@ -77,9 +80,9 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
         .c(link()
             .attr("rel", "stylesheet")
             .attr("href", "/static/css/tailwind.css"))
-        .c(body().c(div()
+        .c(body().class("flex h-screen flex-col").c(main()
             .id("content")
-            .class("grid h-screen place-items-center")
+            .class("grid place-items-center grow")
             .c(match props.content {
                 Pages::MyData { props } => my_data::Page(cx, props),
                 Pages::Profile { props } => profile_page::Page(cx, props),
@@ -87,6 +90,13 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
                 Pages::Login { props } => login_page::Page(cx, props),
                 Pages::NewShare { props } => new_share_page::Page(cx, props),
             })))
+        .c(footer::Footer(
+            cx,
+            footer::Props {
+                translation: props.translation,
+                authenticated: props.authenticated,
+            },
+        ))
         .view(cx)
 }
 

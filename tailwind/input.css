@@ -15,18 +15,41 @@
 @layer base {
         html {
                 font-family: Atkinson, AtkinsonBold;
+                @apply text-slate-900 bg-slate-50 dark:text-slate-50 dark:bg-slate-900;
+        }
+        label {
+                @apply cursor-text;
         }
         h1 {
                 font-family: AtkinsonBold;
-                @apply text-6xl font-bold;
+                @apply text-6xl font-bold before:content-[">"];
         }
 
         .font-bold {
                 font-family: AtkinsonBold;
         }
 
-        h1::before {
-                content: "> ";
+        .link_button {
+                @apply underline
+		cursor-pointer 
+		hover:text-slate-600 
+		dark:hover:text-slate-300 
+		p-2
+		decoration-4;
+        }
+
+        .rounded_input {
+                @apply rounded-full
+		border
+		focus:outline-0
+		focus:border-slate-900
+		dark:focus:border-slate-50
+		border-4
+		shadow-inner
+		transition
+		appearance-none
+		bg-slate-100
+		dark:bg-slate-800;
         }
 
         h2 {
@@ -44,7 +67,7 @@
         }
 
         tbody > tr:nth-child(odd) {
-                @apply bg-pink-50;
+                @apply bg-slate-100 dark:bg-slate-800;
         }
 
         th,

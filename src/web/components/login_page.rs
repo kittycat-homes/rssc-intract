@@ -4,8 +4,14 @@ use crate::web::{
 };
 use sycamore::prelude::*;
 
+use super::common::accent_color::random_color;
+
 #[component]
 pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
+    let accent_colors = random_color(2);
+    let accent_color = accent_colors[0];
+    let accent_color_1 = accent_colors[1];
+
     let translation = props.translation;
     let heading = translation.login_page_heading;
     let username = translation.username;
@@ -13,31 +19,42 @@ pub fn Page(cx: Scope, props: Props) -> View<SsrNode> {
     let login = translation.login;
 
     view! {cx,
-        h1 {(heading)}
+        div (class=format!("md:p-8 p-4 md:m-8 m-4 border-l-4 {}", accent_color)) {
+        h1 (class=accent_color) {(heading)}
         form (action="/login", method="post") {
             label (for="username") {
                 (username)
             }
             br {}
-            input (type="text", id="username", name="username") {}
+            input (type="text",
+                   id="username",
+                   name="username",
+                   class=format!("rounded_input {}", accent_color)) {}
             br {}
             label (for="password") {
                 (password)
             }
             br {}
-            input (type="password", id="password", name="password") {}
+            input (type="password",
+                   class=format!("rounded_input {}", accent_color),
+                   id="password",
+                   name="password") {}
             br {}
-            input (type="submit", value=(login))
+            input (type="submit",
+                   class=format!("link_button {}", accent_color),
+                   value=(login))
         }
-        div (class="flex flex-row justify-around items-center w-full") {
-            a (href="/settings"){
-                (format!("{} ⚙", props.translation.settings_page_heading))
-            }
-            form (action="/login/language", method="post", class="grid justify-center text-center") {
-                LanguagePicker(LanguagePickerProps { translation: props.translation })
-                input (type="submit", value=(format!("{} 💾", props.translation.save)))
-            }
         }
+        form (action="/login/language", method="post") {
+            LanguagePicker(LanguagePickerProps {
+                translation: props.translation,
+                accent_color: accent_color_1,
+            })
+            br{}
+            input (type="submit",
+                    class=format!("link_button {}", accent_color_1),
+                    value=(format!("{} 💾", props.translation.save)))
+            }
     }
 }
 
