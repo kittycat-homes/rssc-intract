@@ -2,7 +2,7 @@ use rand::seq::SliceRandom;
 
 lazy_static! {
     static ref COLORS: Vec<&'static str> = vec![
-        "decoration-pink-600 dark:decoration-pink-50",
+        "before:text-pink-600 decoration-pink-600 dark:before:text-pink-50 dark:decoration-pink-50",
         "decoration-teal-600 dark:decoration-teal-50",
         "decoration-teal-600 dark:decoration-teal-50",
         "decoration-lime-600 dark:decoration-lime-50",

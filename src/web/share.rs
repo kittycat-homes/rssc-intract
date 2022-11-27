@@ -26,6 +26,7 @@ fn new(session: Session, translation: Translation) -> RawHtml<String> {
             },
         },
         translation,
+        true,
     )
 }
 

@@ -37,6 +37,7 @@ struct ProfileViewData {
 pub fn profile(
     username: String,
     translation: Translation,
+    session: Option<Session>,
 ) -> Result<content::RawHtml<String>, Status> {
     let user = match db::user::get(username) {
         Ok(u) => u,
@@ -51,6 +52,7 @@ pub fn profile(
             props: profile_page::Props { user },
         },
         translation,
+        session.is_some(),
     ))
 }
 
