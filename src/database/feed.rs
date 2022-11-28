@@ -12,6 +12,10 @@ pub struct Feed {
     #[builder(default)]
     pub title: Option<String>,
     pub last_updated: SystemTime,
+    #[builder(default)]
+    pub description: Option<String>,
+    #[builder(default)]
+    pub language: Option<String>,
 }
 
 /// struct for updating feeds. None means no change
@@ -22,6 +26,10 @@ pub struct UpdateFeed {
     pub title: Option<String>,
     #[builder(default)]
     pub last_updated: Option<SystemTime>,
+    #[builder(default)]
+    pub description: Option<String>,
+    #[builder(default)]
+    pub language: Option<String>,
 }
 
 /// create feed from feed struct
