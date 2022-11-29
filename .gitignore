@@ -2,3 +2,4 @@
 /web/static/css/tailwind.css
 /node_modules
 Cargo.lock
+.db

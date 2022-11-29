@@ -23,9 +23,12 @@ console_level = "Info"
 # Default: Trace
 file_level = "Trace"
 
+[privacy]
+robots_txt = "User-agent: *\nDisallow: /"
+
 [security]
 # used for encrypting cookies
 secret_key = "hPRYyVRiMyxpw5sBB1XeCMN1kFsDCqKvBi2QJxBVHQk="
 
 [database]
-url = "postgres://username:password@localhost/intract"
+url = "postgres://postgres@localhost/intract"
