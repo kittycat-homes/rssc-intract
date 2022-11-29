@@ -35,7 +35,7 @@ table! {
         uri -> Text,
         title -> Nullable<Text>,
         description -> Nullable<Text>,
-        media -> Int4,
+        media -> Nullable<Int4>,
         feed -> Nullable<Text>,
     }
 }
@@ -67,7 +67,7 @@ table! {
         url -> Text,
         title -> Nullable<Text>,
         description -> Nullable<Text>,
-        feed_id -> Nullable<Text>,
+        feed_id -> Text,
         time -> Timestamp,
         content -> Nullable<Text>,
         summary -> Nullable<Text>,

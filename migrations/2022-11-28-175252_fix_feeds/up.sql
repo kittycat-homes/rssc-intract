@@ -48,7 +48,7 @@ CREATE TABLE images (
 	uri TEXT NOT NULL,
 	title TEXT,
 	description TEXT,
-	media SERIAL,
+	media INTEGER,
 	feed TEXT,
 	CONSTRAINT fk_feed FOREIGN KEY (feed) REFERENCES feeds (id),
 	CONSTRAINT fk_media FOREIGN KEY (media) REFERENCES medias (id)

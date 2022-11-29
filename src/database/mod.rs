@@ -7,12 +7,12 @@ pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations");
 pub mod caption;
 pub mod category;
 pub mod feed;
-pub mod follow;
 pub mod image;
+pub mod link;
+pub mod media;
 pub mod post;
 pub mod schema;
 pub mod sessionid;
-pub mod share;
 pub mod subscription;
 pub mod user;
 

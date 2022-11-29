@@ -55,12 +55,9 @@ pub fn delete(id: String) -> QueryResult<usize> {
     let connection = &mut establish_connection();
 
     // delete anything that references this feed
-    diesel::update(posts::table.filter(posts::feed_id.eq(&id)))
-        .set(posts::feed_id.eq::<Option<String>>(None))
-        .execute(connection)?;
     diesel::delete(subscriptions::table.filter(subscriptions::feed_id.eq(&id)))
         .execute(connection)?;
-
+    diesel::delete(posts::table.filter(posts::feed_id.eq(&id))).execute(connection)?;
     // delete feed
     diesel::delete(feeds::table.find(id)).execute(connection)
 }

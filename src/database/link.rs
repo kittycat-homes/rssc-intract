@@ -1,11 +1,10 @@
 use diesel::Queryable;
 
 #[derive(Queryable)]
-pub struct Image {
+pub struct Link {
     pub id: i32,
-    pub uri: String,
+    pub href: Option<String>,
     pub title: Option<String>,
-    pub description: Option<String>,
-    pub media: Option<i32>,
     pub feed: Option<String>,
+    pub post: Option<String>,
 }

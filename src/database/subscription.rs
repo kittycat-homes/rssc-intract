@@ -17,7 +17,14 @@ pub fn get_subscriptions(username: String) -> QueryResult<Vec<Feed>> {
     feeds::table
         .inner_join(subscriptions::table.on(subscriptions::feed_id.eq(feeds::id)))
         .filter(subscriptions::username.eq(username))
-        .select((feeds::id, feeds::url, feeds::title, feeds::last_updated))
+        .select((
+            feeds::id,
+            feeds::url,
+            feeds::title,
+            feeds::last_updated,
+            feeds::description,
+            feeds::language,
+        ))
         .load::<Feed>(connection)
 }
 

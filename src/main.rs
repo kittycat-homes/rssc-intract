@@ -19,6 +19,9 @@ extern crate log as logmacro;
 #[macro_use]
 extern crate derive_builder;
 
+#[macro_use]
+extern crate diesel;
+
 /// this module defines the client api
 pub mod api;
 
