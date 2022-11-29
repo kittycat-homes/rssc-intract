@@ -137,7 +137,7 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
                         onclick=format!("return confirm('{}')", props.translation.irreversible_changes_warning),
                         value=(format!("{} 💾", props.translation.save))) {
                     }
-                    
+
                     div(class="py-4") {
                         input (
                             type="checkbox",
