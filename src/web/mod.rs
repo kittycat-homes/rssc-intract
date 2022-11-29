@@ -10,7 +10,6 @@ mod user;
 
 pub fn routes() -> Vec<Route> {
     [
-        routes![user::profile],
         auth::routes(),
         settings::routes(),
         user::routes(),
