@@ -66,22 +66,14 @@ pub fn update(username: String, user: UpdateUser) -> QueryResult<User> {
 
 /// deletes user
 pub fn delete(username: String) -> QueryResult<usize> {
-    use crate::database::schema::{follows, sessionid, shares, subscriptions, tags};
+    use crate::database::schema::{sessionid, subscriptions};
     let connection = &mut establish_connection();
 
     // clear username foreign key references
-    diesel::delete(
-        follows::table
-            .filter(follows::follower.eq(&username))
-            .or_filter(follows::followed.eq(&username)),
-    )
-    .execute(connection)?;
     diesel::delete(subscriptions::table.filter(subscriptions::username.eq(&username)))
         .execute(connection)?;
     diesel::delete(sessionid::table.filter(sessionid::username.eq(&username)))
         .execute(connection)?;
-    diesel::delete(tags::table.filter(tags::username.eq(&username))).execute(connection)?;
-    diesel::delete(shares::table.filter(shares::username.eq(&username))).execute(connection)?;
 
     // finally delete user
     diesel::delete(users::table.find(username)).execute(connection)

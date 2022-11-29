@@ -5,6 +5,7 @@ pkgs.mkShell {
       pkg-config
       openssl
       postgresql
+      diesel-cli
     ];
   }
 

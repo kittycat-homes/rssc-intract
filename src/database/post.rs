@@ -13,8 +13,12 @@ pub struct Post {
     #[builder(default)]
     pub description: Option<String>,
     #[builder(default)]
-    pub feed_id: Option<String>,
+    pub feed_id: String,
     pub time: SystemTime,
+    #[builder(default)]
+    pub summary: Option<String>,
+    #[builder(default)]
+    pub content: Option<String>,
 }
 
 /// struct used for updating posts. None means no change
@@ -50,13 +54,7 @@ pub fn get(id: String) -> QueryResult<Post> {
 /// delete post
 /// returns number of things that were deleted
 pub fn delete(id: String) -> QueryResult<usize> {
-    use crate::database::schema::{shares, tags};
     let connection = &mut establish_connection();
-
-    // delete things which reference the post
-    diesel::delete(tags::table.filter(tags::post_id.eq(&id))).execute(connection)?;
-    diesel::delete(shares::table.filter(shares::post_id.eq(&id))).execute(connection)?;
-
     diesel::delete(posts::table.find(id)).execute(connection)
 }
 

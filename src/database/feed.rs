@@ -12,6 +12,10 @@ pub struct Feed {
     #[builder(default)]
     pub title: Option<String>,
     pub last_updated: SystemTime,
+    #[builder(default)]
+    pub description: Option<String>,
+    #[builder(default)]
+    pub language: Option<String>,
 }
 
 /// struct for updating feeds. None means no change
@@ -22,6 +26,10 @@ pub struct UpdateFeed {
     pub title: Option<String>,
     #[builder(default)]
     pub last_updated: Option<SystemTime>,
+    #[builder(default)]
+    pub description: Option<String>,
+    #[builder(default)]
+    pub language: Option<String>,
 }
 
 /// create feed from feed struct
@@ -47,12 +55,9 @@ pub fn delete(id: String) -> QueryResult<usize> {
     let connection = &mut establish_connection();
 
     // delete anything that references this feed
-    diesel::update(posts::table.filter(posts::feed_id.eq(&id)))
-        .set(posts::feed_id.eq::<Option<String>>(None))
-        .execute(connection)?;
     diesel::delete(subscriptions::table.filter(subscriptions::feed_id.eq(&id)))
         .execute(connection)?;
-
+    diesel::delete(posts::table.filter(posts::feed_id.eq(&id))).execute(connection)?;
     // delete feed
     diesel::delete(feeds::table.find(id)).execute(connection)
 }
