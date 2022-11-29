@@ -1,31 +1,24 @@
 [frontend]
-# file path to frontend
-# this is where your index.html lives
 location = 'web'
 
 [web]
-port = 6969
-address = "127.0.0.1"
+port = 4000
+address = '127.0.0.1'
 
 [log]
-# Path to log
-path = "/tmp/intract.log"
+path = '/tmp/intract.log'
+size = 5.0
+# these levels can be INFO TRACE WARNING or ERROR
+console_level = 'INFO'
+file_level = 'INFO'
 
-# Max size of log, in mb.
-size = 5
-
-# Lowest log level to print to console
-# Off, Error, Warn, Info, Debug, Trace
-# Default: Info
-console_level = "Info"
-
-# Lowest log level in log file
-# Default: Trace
-file_level = "Trace"
+[privacy]
+# this tells search engines if they're allowed to index your site
+robots_txt = 'User-agent: *\nDisallow: /'
 
 [security]
-# used for encrypting cookies
-secret_key = "hPRYyVRiMyxpw5sBB1XeCMN1kFsDCqKvBi2QJxBVHQk="
+# you should probably generate your own when running this
+secret_key = 'hPRYyVRiMyxpw5sBB1XeCMN1kFsDCqKvBi2QJxBVHQk='
 
 [database]
-url = "postgres://username:password@localhost/intract"
+url = 'postgres://username:password@localhost/database'
