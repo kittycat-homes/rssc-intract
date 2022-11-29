@@ -16,9 +16,6 @@ file_level = 'INFO'
 # this tells search engines if they're allowed to index your site
 robots_txt = 'User-agent: *\nDisallow: /'
 
-[privacy]
-robots_txt = "User-agent: *\nDisallow: /"
-
 [security]
 # you should probably generate your own when running this
 secret_key = 'hPRYyVRiMyxpw5sBB1XeCMN1kFsDCqKvBi2QJxBVHQk='
