@@ -20,7 +20,7 @@ in
       pkgs.pkg-config
       pkgs.openssl
       pkgs.postgresql
-        pkgs.diesel-cli
+      pkgs.diesel-cli
       dbStop
       dbStart
     ];
