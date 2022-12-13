@@ -63,16 +63,18 @@ struct LanguageFormProps {
 #[component]
 fn LanguageForm(cx: Scope, props: LanguageFormProps) -> View<SsrNode> {
     view! {cx,
-        form (action="/settings/client", method="post") {
-            h2 {(props.translation.settings_page_client_heading)}
-            LanguagePicker(LanguagePickerProps {
-                translation: props.translation,
-                accent_color: props.accent_color,
-            })
-            br {}
-            input (type="submit",
-                   class=format!("link_button {}", props.accent_color),
-                   value=(format!("{} 💾", props.translation.save))) {}
+        div(class="pt-5") {
+            form (action="/settings/client", method="post") {
+                h2 {(props.translation.settings_page_client_heading)}
+                LanguagePicker(LanguagePickerProps {
+                    translation: props.translation,
+                    accent_color: props.accent_color,
+                })
+                br {}
+                input (type="submit",
+                    class=format!("pt-1 link_button {}", props.accent_color),
+                    value=(format!("{} 💾", props.translation.save))) {}
+            }
         }
     }
 }
@@ -85,59 +87,69 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
     };
 
     view! {cx,
-        div {
-        h2 {(props.translation.user)}
-        form (action="/settings/user", method="post"){
-            h3 {(props.translation.settings_page_profile_heading)}
-            label (for="displayname") {(props.translation.display_name)}
-                br {}
-                input (
-                    type="text",
-                    id="displayname",
-                    name="displayname",
-                    value=(display_name),
-                    class=format!("rounded_input {}", props.accent_color)
-                    ){}
-                br {}
-                input (type="submit", class=format!("link_button {}", props.accent_color), value=(format!("{} 💾", props.translation.save))) {}
+        div(class="pt-5") {
+            h2 {(props.translation.user)}
+            div(class="pt-3") {
+                form (action="/settings/user", method="post"){
+                    h3 {(props.translation.settings_page_profile_heading)}
+                    label (for="displayname") {(props.translation.display_name)}
+                    br {}
+                    input (
+                        type="text",
+                        id="displayname",
+                        name="displayname",
+                        value=(display_name),
+                        class=format!("rounded_input {}", props.accent_color)
+                        ){}
+                    br {}
+                    input (type="submit", class=format!("pt-1 link_button {}", props.accent_color), value=(format!("{} 💾", props.translation.save))) {}
+                }
             }
 
             form (action="/settings/password", method="post"){
-                h3 {(props.translation.settings_page_password_heading)}
-                // new password
-                label (for="new_password"){(props.translation.new_password)}
-                br {}
-                input (
-                    type="password",
-                    id="new_password",
-                    name="new_password",
-                    class=format!("rounded_input {}", props.accent_color)
-                    ) {}
-                br {}
-                input (
-                    type="checkbox",
-                    id="delete",
-                    name="delete",
-                    class=format!("rounded cursor-pointer rounded_input {}", props.accent_color)
-                    ) {}
-                label (for="delete") {(props.translation.delete_my_account)}
-                br {}
-                // old password
-                label (for="password"){(props.translation.password)}
-                br {}
-                input (
-                    type="password",
-                    id="password",
-                    name="password",
-                    class=format!("rounded_input {}", props.accent_color)
-                    ) {}
-                input (type="submit",
-                       class=format!("link_button {}", props.accent_color),
-                       onclick=format!("return confirm('{}')", props.translation.irreversible_changes_warning),
-                       value=(format!("{} 💾", props.translation.save))) {
+                div(class="pt-3") {
+                    h3 {(props.translation.settings_page_password_heading)}
+                    // new password
+                    div(class="pt-2") {
+                        label (for="new_password"){(props.translation.new_password)}
+                        br {}
+                        input (
+                            type="password",
+                            id="new_password",
+                            name="new_password",
+                            class=format!("rounded_input {}", props.accent_color)
+                            ) {}
+                        }
+                    // old password
+                    div(class="pt-2") {
+                        label (for="password"){(props.translation.password)}
+                        br {}
+                        input (
+                            type="password",
+                            id="password",
+                            name="password",
+                            class=format!("rounded_input {}", props.accent_color)
+                            ) {}
+                    }
+
+                    input (type="submit",
+                        class=format!("pt-1 link_button {}", props.accent_color),
+                        onclick=format!("return confirm('{}')", props.translation.irreversible_changes_warning),
+                        value=(format!("{} 💾", props.translation.save))) {
+                    }
+
+                    div(class="py-4") {
+                        input (
+                            type="checkbox",
+                            id="delete",
+                            name="delete",
+                            class=format!("rounded cursor-pointer rounded_input {}", props.accent_color)
+                            ) {}
+                        label (for="delete") {(props.translation.delete_my_account)}
+                    }
                 }
+                a (href="/logout", class=format!("link_button {}", props.accent_color)){(props.translation.logout)}
             }
-        a (href="/logout", class=format!("link_button {}", props.accent_color)){(props.translation.logout)}
         }
     }
 }
