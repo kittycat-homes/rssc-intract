@@ -4,11 +4,13 @@ use sycamore::{builder::prelude::*, prelude::*, render_to_string};
 use super::language::Translation;
 
 pub mod common;
+pub mod delete_profile;
 mod footer;
 pub mod login_page;
 pub mod my_data;
 pub mod profile_page;
 pub mod settings_page;
+pub mod subscribe_page;
 
 /// renders a page to raw html
 pub fn render_page(page: Pages, translation: Translation, authenticated: bool) -> RawHtml<String> {
@@ -36,6 +38,12 @@ pub enum Pages {
     },
     Settings {
         props: settings_page::Props,
+    },
+    DeleteProfile {
+        props: delete_profile::Props,
+    },
+    Subscribe {
+        props: subscribe_page::Props,
     },
     Login {
         props: login_page::Props,
@@ -66,8 +74,14 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
                 Pages::MyData { props } => {
                     format!("{} | rssc-intract", props.translation.my_data)
                 }
+                Pages::DeleteProfile { props } => {
+                    format!("{} | rssc-intract", props.translation.delete_my_account)
+                }
                 Pages::Profile { props } => format!("{} | rssc-intract", props.user.username),
                 Pages::Login { props } => format!("{} | rssc-intract", props.translation.login),
+                Pages::Subscribe { props } => {
+                    format!("{} | rssc-intract", props.translation.subscribe)
+                }
             },
         ))
         .c(link()
@@ -80,7 +94,9 @@ fn App(cx: Scope, props: AppProps) -> View<SsrNode> {
                 Pages::MyData { props } => my_data::Page(cx, props),
                 Pages::Profile { props } => profile_page::Page(cx, props),
                 Pages::Settings { props } => settings_page::Page(cx, props),
+                Pages::DeleteProfile { props } => delete_profile::Page(cx, props),
                 Pages::Login { props } => login_page::Page(cx, props),
+                Pages::Subscribe { props } => subscribe_page::Page(cx, props),
             })))
         .c(footer::Footer(
             cx,

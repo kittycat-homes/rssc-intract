@@ -2,12 +2,12 @@
 let
   dbStop = pkgs.writeShellScriptBin "db-stop" ''
       echo "Shutting down the database..."
-      ${pkgs.postgresql_14}/bin/pg_ctl stop &> /dev/null
+      ${pkgs.postgresql_15}/bin/pg_ctl stop &> /dev/null
       echo "Done!"
   '';
   dbStart = pkgs.writeShellScriptBin "db-start" ''
       if [ ! -f $PGDATA/postmaster.pid ]; then
-        ${pkgs.postgresql_14}/bin/pg_ctl -l $PGDATA/logfile start
+        ${pkgs.postgresql_15}/bin/pg_ctl -l $PGDATA/logfile start
       else
         echo "Postgres is already running"
       fi

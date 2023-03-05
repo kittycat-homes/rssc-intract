@@ -2,9 +2,12 @@ use super::Translation;
 
 pub const TRANSLATION: Translation = Translation {
     code: "en",
+    subscribe: "subscribe",
     user: "user",
     username: "username",
     password: "password",
+    invalid_url: "invalid url! this might not be what you meant to enter",
+    url: "url",
     login: "login",
     display_name: "display name",
     logout: "log out",

@@ -5,7 +5,7 @@
 use crate::{
     logic::{
         auth::Session,
-        settings::{ClientSettings, PasswordSettings, UserSettings},
+        settings::{ClientSettings, DeleteAccount, PasswordSettings, UserSettings},
     },
     web::{components, language::Translation},
 };
@@ -23,6 +23,8 @@ pub fn routes() -> Vec<Route> {
         change_settings,
         change_client_settings,
         change_password_settings,
+        delete_profile,
+        post_delete_profile,
     ]
 }
 
@@ -38,6 +40,20 @@ fn settings(session: Option<Session>, translation: Translation) -> RawHtml<Strin
         },
         translation,
         authenticated,
+    )
+}
+
+#[get("/settings/delete_profile")]
+fn delete_profile(session: Session, translation: Translation) -> RawHtml<String> {
+    components::render_page(
+        components::Pages::DeleteProfile {
+            props: components::delete_profile::Props {
+                translation,
+                user: session.user,
+            },
+        },
+        translation,
+        true,
     )
 }
 
@@ -65,6 +81,20 @@ fn change_password_settings(
     let save = settings.change_password(&session.user.username);
     match save {
         Ok(_) => Ok(Redirect::to("/login")),
+        Err(e) => {
+            error!("{}", e);
+            Err(Redirect::to("/settings"))
+        }
+    }
+}
+
+#[post("/settings/delete_profile", data = "<data>")]
+fn post_delete_profile(
+    session: Session,
+    data: Form<DeleteAccount<'_>>,
+) -> Result<Redirect, Redirect> {
+    match data.delete(&session.user.username) {
+        Ok(_) => Ok(Redirect::to("/")),
         Err(e) => {
             error!("{}", e);
             Err(Redirect::to("/settings"))

@@ -6,6 +6,7 @@ pub mod language;
 mod my_data;
 mod robots;
 mod settings;
+mod subscribe;
 mod user;
 
 pub fn routes() -> Vec<Route> {
@@ -15,6 +16,7 @@ pub fn routes() -> Vec<Route> {
         user::routes(),
         my_data::routes(),
         robots::routes(),
+        subscribe::routes(),
     ]
     .concat()
 }

@@ -60,7 +60,6 @@ pub fn set_language_cookie(value: &str, jar: &CookieJar<'_>) {
 pub struct PasswordSettings<'r> {
     password: &'r str,
     new_password: &'r str,
-    delete: bool,
 }
 
 impl PasswordSettings<'_> {
@@ -70,12 +69,6 @@ impl PasswordSettings<'_> {
             return Err(SettingsError::LoginInvalid)?;
         }
 
-        // delete account
-        if self.delete {
-            db::user::delete(username.into())?;
-            return Ok(());
-        }
-
         // dont allow empty passwords
         if self.new_password.is_empty() {
             return Err(SettingsError::NoPassword)?;
@@ -83,5 +76,28 @@ impl PasswordSettings<'_> {
 
         auth::change_password(username.to_string(), self.new_password.to_string())?;
         Ok(())
+    }
+}
+
+#[derive(FromForm)]
+pub struct DeleteAccount<'r> {
+    password: &'r str,
+    username: &'r str,
+}
+
+impl DeleteAccount<'_> {
+    pub fn delete(&self, username: &str) -> Result<(), Box<dyn Error>> {
+        // errors if the login is not valid
+        if !auth::is_valid_login(self.username, self.password)? {
+            return Err(SettingsError::LoginInvalid)?;
+        }
+        if username != self.username {
+            return Err(SettingsError::LoginInvalid)?;
+        }
+
+        match db::user::delete(self.username.into()) {
+            Ok(_) => Ok(()),
+            Err(e) => Err(e)?,
+        }
     }
 }
