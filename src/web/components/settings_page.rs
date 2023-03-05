@@ -137,17 +137,9 @@ fn AuthenticatedSettings(cx: Scope, props: AuthenticatedSettingsProps) -> View<S
                         onclick=format!("return confirm('{}')", props.translation.irreversible_changes_warning),
                         value=(format!("{} 💾", props.translation.save))) {
                     }
-
-                    div(class="py-4") {
-                        input (
-                            type="checkbox",
-                            id="delete",
-                            name="delete",
-                            class=format!("rounded cursor-pointer rounded_input {}", props.accent_color)
-                            ) {}
-                        label (for="delete") {(props.translation.delete_my_account)}
-                    }
                 }
+                a (href="/settings/delete_profile", class=format!("link_button {}", props.accent_color)){(props.translation.delete_my_account)}
+                br {}
                 a (href="/logout", class=format!("link_button {}", props.accent_color)){(props.translation.logout)}
             }
         }

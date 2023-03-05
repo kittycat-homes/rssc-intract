@@ -12,11 +12,7 @@ mod english;
 
 #[derive(Clone, Copy)]
 pub struct Translation {
-    /// code represnting the language, for putting in the html header
-    /// english would be en and german would be de
     pub code: &'static str,
-
-    // common things
     pub username: &'static str,
     pub password: &'static str,
     pub login: &'static str,
@@ -34,16 +30,11 @@ pub struct Translation {
     pub value: &'static str,
     pub delete_my_account: &'static str,
     pub irreversible_changes_warning: &'static str,
-
     pub go_to_login_for_more_settings: &'static str,
-
-    // headings
-    //// settings page
     pub settings_page_heading: &'static str,
     pub settings_page_profile_heading: &'static str,
     pub settings_page_client_heading: &'static str,
     pub settings_page_password_heading: &'static str,
-    //// login page
     pub login_page_heading: &'static str,
     pub data: &'static str,
     pub description: &'static str,
@@ -52,6 +43,9 @@ pub struct Translation {
     pub password_description: &'static str,
     pub session_token: &'static str,
     pub session_token_description: &'static str,
+    pub subscribe: &'static str,
+    pub invalid_url: &'static str,
+    pub url: &'static str,
 }
 
 #[rocket::async_trait]
